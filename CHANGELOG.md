@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.1+1`](#j2m---v0011)
+
+---
+
+#### `j2m` - `v0.0.1+1`
+
+ - **DOCS**: update README.md to enhance project title and link.
+
+
 ## 2025-03-02
 
 ### Changes

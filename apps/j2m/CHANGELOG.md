@@ -1,3 +1,7 @@
+## 0.0.1+1
+
+ - **DOCS**: update README.md to enhance project title and link.
+
 ## 0.0.1
 
  - **FEAT**: set application title for improved user experience.
