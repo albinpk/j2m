@@ -1,3 +1,3 @@
-# j2m
+# **J2M - JSON to Model Converter** 🚀
 
-A new Flutter project.
+### [Readme](../../README.md)
