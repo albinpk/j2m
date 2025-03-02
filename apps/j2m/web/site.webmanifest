@@ -1,0 +1,25 @@
+{
+  "name": "J2M - JSON to Model Converter",
+  "short_name": "J2M",
+  "description": "Easily convert JSON into model classes for Dart, Kotlin, Swift, and more. A must-have tool for developers!",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["developer", "tools", "utility", "json", "converter"]
+}
