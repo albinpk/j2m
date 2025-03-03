@@ -8,12 +8,18 @@ class InputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      // decoration: const InputDecoration(border: OutlineInputBorder()),
-      maxLines: null,
-      expands: true,
-      style: const TextStyle(fontFamily: 'RobotoMono'),
+    return DecoratedBox(
+      decoration: BoxDecoration(border: Border.all(color: Colors.white10)),
+      child: TextField(
+        controller: controller,
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.all(8),
+        ),
+        maxLines: null,
+        expands: true,
+        style: const TextStyle(fontFamily: 'RobotoMono'),
+      ),
     );
   }
 }

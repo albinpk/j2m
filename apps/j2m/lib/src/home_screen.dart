@@ -8,6 +8,8 @@ import 'package:flutter_highlight/themes/dracula.dart';
 import 'package:highlight/languages/json.dart';
 
 import 'converter/dart_converter.dart';
+import 'converter/languages.dart';
+import 'extensions/context_extensions.dart';
 import 'input_view.dart';
 import 'output_view.dart';
 
@@ -53,13 +55,34 @@ class _HomeScreenState extends State<HomeScreen> {
             // top bar
             Row(
               children: [
-                Tooltip(
-                  message: 'JSON to Model',
-                  child: Text(
-                    'J2M',
-                    style: Theme.of(context).textTheme.titleMedium,
+                Text('Json to', style: Theme.of(context).textTheme.titleMedium),
+                PopupMenuButton(
+                  borderRadius: BorderRadius.circular(8),
+                  onSelected: print,
+                  itemBuilder: (context) {
+                    return Languages.values.map((e) {
+                      return PopupMenuItem(value: e, child: Text(e.label));
+                    }).toList();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ).copyWith(right: 2),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Dart',
+                          style: context.tt.titleMedium?.copyWith(
+                            color: context.cs.primary,
+                          ),
+                        ),
+                        Icon(Icons.arrow_drop_down, color: context.cs.primary),
+                      ],
+                    ),
                   ),
                 ),
+
                 const Spacer(),
 
                 for (final field in _converter.toggles)
@@ -89,9 +112,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: InputView(controller: _inputController),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(12),
+                          SizedBox(
+                            width: double.infinity,
                             child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                              ),
                               onPressed: _convert,
                               child: const Text('Convert'),
                             ),
@@ -99,16 +125,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    const VerticalDivider(width: 20),
+                    const SizedBox(width: 14),
 
                     // output editor
                     Expanded(
                       child: Column(
                         children: [
                           Expanded(child: OutputView(converter: _converter)),
-                          Padding(
-                            padding: const EdgeInsets.all(12),
+                          SizedBox(
+                            width: double.infinity,
                             child: FilledButton(
+                              style: FilledButton.styleFrom(
+                                shape: const RoundedRectangleBorder(),
+                              ),
                               onPressed: _copy,
                               child: const Text('Copy'),
                             ),
@@ -154,12 +183,29 @@ class _HomeScreenState extends State<HomeScreen> {
         ..setData(json)
         ..convert();
       setState(() {});
+    } on FormatException catch (e) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text('Error: ${e.message}'), showCloseIcon: true),
+        );
     } catch (e) {
       log('error $e');
     }
   }
 
-  void _copy() {
-    Clipboard.setData(ClipboardData(text: _converter.controller.fullText));
+  Future<void> _copy() async {
+    await Clipboard.setData(
+      ClipboardData(text: _converter.controller.fullText),
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text('Copied to clipboard!'),
+          showCloseIcon: true,
+        ),
+      );
   }
 }
