@@ -7,14 +7,17 @@ import 'config.dart';
 abstract class ConverterBase {
   ConverterBase();
 
+  /// Language configuration for the converter.
   @protected
   abstract final ConfigBase config;
 
+  /// Code controller for the output view.
   abstract final CodeController controller;
 
   /// JSON data to convert.
   dynamic _data;
 
+  /// The JSON data to convert.
   dynamic get data => _data;
 
   void setData(dynamic data) {
@@ -32,8 +35,10 @@ abstract class ConverterBase {
 
   late final _toggleData = {for (final key in config.toggles) key: false};
 
+  /// Get the current value of a toggle.
   bool getToggleValue(String key) => _toggleData[key]!;
 
+  /// Get all toggles and their values.
   Set<({VoidCallback change, String label, bool value})> get toggles => {
     for (final toggle in config.toggles)
       (

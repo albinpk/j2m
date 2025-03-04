@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 extension ContextExtensions on BuildContext {
-  /// ThemeData
+  /// ThemeData.
   ThemeData get theme => Theme.of(this);
 
-  /// ColorScheme
+  /// ColorScheme.
   ColorScheme get cs => theme.colorScheme;
 
-  /// TextTheme
+  /// TextTheme.
   TextTheme get tt => theme.textTheme;
 }

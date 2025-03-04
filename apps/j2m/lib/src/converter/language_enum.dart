@@ -1,8 +1,8 @@
 /// All supported languages
-enum Languages {
+enum Language {
   dart('Dart');
 
-  const Languages(this.label);
+  const Language(this.label);
 
   /// Display name.
   final String label;

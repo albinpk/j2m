@@ -2,19 +2,17 @@ import 'package:change_case/change_case.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/languages/dart.dart';
 
-import 'config.dart';
-import 'converter.dart';
+import '../../converter/config.dart';
+import '../../converter/converter.dart';
+import '../../types.dart';
 
-typedef Json = Map<String, dynamic>;
-
-final class JsonToDartConverter extends ConverterBase {
-  JsonToDartConverter();
+/// Classic converter for Dart language.
+final class DartClassicConverter extends ConverterBase {
+  @override
+  final DartClassicConfig config = DartClassicConfig();
 
   @override
-  final DartConfig config = DartConfig();
-
-  @override
-  final controller = CodeController(language: dart);
+  final CodeController controller = CodeController(language: dart);
 
   @override
   void convert() {
@@ -27,9 +25,9 @@ final class JsonToDartConverter extends ConverterBase {
   }
 
   String _generateClass({required Json json, required String className}) {
-    final isMutable = getToggleValue(DartConfig.mutable);
-    final isAllRequired = getToggleValue(DartConfig.required);
-    final isAllNullable = getToggleValue(DartConfig.nullable);
+    final isMutable = getToggleValue(DartClassicConfig.mutable);
+    final isAllRequired = getToggleValue(DartClassicConfig.required);
+    final isAllNullable = getToggleValue(DartClassicConfig.nullable);
 
     final code = StringBuffer(
       'class $className {\n' // class start
@@ -96,10 +94,11 @@ final class JsonToDartConverter extends ConverterBase {
   }
 }
 
-final class DartConfig extends ConfigBase {
+final class DartClassicConfig extends ConfigBase {
   @override
   Set<String> get toggles => const {mutable, required, nullable};
 
+  // TODO(albin): as instance variables.
   static const mutable = 'Mutable';
   static const required = 'Required';
   static const nullable = 'Nullable';

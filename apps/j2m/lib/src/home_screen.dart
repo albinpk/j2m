@@ -7,8 +7,9 @@ import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_highlight/themes/dracula.dart';
 import 'package:highlight/languages/json.dart';
 
-import 'converter/dart_converter.dart';
-import 'converter/languages.dart';
+import 'converter/converter.dart';
+import 'converter/language_enum.dart';
+import 'converter/variant.dart';
 import 'extensions/context_extensions.dart';
 import 'input_view.dart';
 import 'output_view.dart';
@@ -34,8 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
     language: json,
   );
 
-  final _converter = JsonToDartConverter();
-
   static const _encoder = JsonEncoder.withIndent('  ');
 
   @override
@@ -44,6 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
     _converter.dispose();
     super.dispose();
   }
+
+  Language _language = Language.dart;
+  Variant _variant = Variant.dartClassic;
+  ConverterBase _converter = Variant.dartClassic.converter();
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Text('Json to', style: Theme.of(context).textTheme.titleMedium),
+
+                // language list
                 PopupMenuButton(
                   borderRadius: BorderRadius.circular(8),
-                  onSelected: print,
+                  onSelected: _onChangeLanguage,
+                  initialValue: _language,
                   itemBuilder: (context) {
-                    return Languages.values.map((e) {
+                    return Language.values.map((e) {
                       return PopupMenuItem(value: e, child: Text(e.label));
                     }).toList();
                   },
@@ -72,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Text(
-                          'Dart',
+                          _language.label,
                           style: context.tt.titleMedium?.copyWith(
                             color: context.cs.primary,
                           ),
@@ -84,20 +90,43 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
                 const Spacer(),
-
-                for (final field in _converter.toggles)
-                  _buildButton(
-                    label: field.label,
-                    value: field.value,
-                    onTap: () {
-                      field.change();
-                      _converter.convert();
-                      setState(() {});
-                    },
-                  ),
+                Row(
+                  spacing: 8,
+                  children: [
+                    for (final v in Variant.ofLanguage(_language))
+                      ChoiceChip(
+                        label: Text(v.name),
+                        selected: _variant == v,
+                        onSelected: (value) {
+                          if (value) _onChangeVariant(v);
+                        },
+                      ),
+                  ],
+                ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+
+            // toggles
+            SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.end,
+                children: [
+                  for (final field in _converter.toggles)
+                    _buildButton(
+                      label: field.label,
+                      value: field.value,
+                      onTap: () {
+                        field.change();
+                        _converter.convert();
+                        setState(() {});
+                      },
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
 
             // editor
             Expanded(
@@ -155,6 +184,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _onChangeLanguage(Language lang) {
+    setState(() {
+      _language = lang;
+      _variant = Variant.ofLanguage(lang).first;
+      _converter.dispose();
+      _converter = _variant.converter();
+    });
+    _convert();
+  }
+
+  void _onChangeVariant(Variant variant) {
+    setState(() {
+      _variant = variant;
+      _converter.dispose();
+      _converter = variant.converter();
+    });
+    _convert();
+  }
+
   TextButton _buildButton({
     required String label,
     required bool value,
@@ -163,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return TextButton(
       onPressed: onTap,
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(label),
           Checkbox(
@@ -174,8 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // TODO(albin): cache json and load data on change
   void _convert() {
-    final text = _inputController.fullText;
+    final text = _inputController.fullText.trim();
+    if (text.isEmpty) return;
     try {
       final json = jsonDecode(text);
       _inputController.fullText = _encoder.convert(json);
