@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_code_editor/flutter_code_editor.dart';
-
-import 'config.dart';
+part of 'base.dart';
 
 /// Base class for all converters.
 abstract class ConverterBase {
@@ -20,7 +17,7 @@ abstract class ConverterBase {
   /// The JSON data to convert.
   dynamic get data => _data;
 
-  void setData(dynamic data) {
+  void setJson(dynamic data) {
     assert(data is Map || data is List, 'Invalid data type');
     _data = data;
   }
@@ -33,18 +30,15 @@ abstract class ConverterBase {
     controller.dispose();
   }
 
-  late final _toggleData = {for (final key in config.toggles) key: false};
+  /// Get all toggles for the converter.
+  Set<Toggle> get toggles => config.toggles;
+
+  /// Data for toggles.
+  final _toggleData = <String, bool>{};
 
   /// Get the current value of a toggle.
-  bool getToggleValue(String key) => _toggleData[key]!;
+  bool? _getToggleValue(String key) => _toggleData[key];
 
-  /// Get all toggles and their values.
-  Set<({VoidCallback change, String label, bool value})> get toggles => {
-    for (final toggle in config.toggles)
-      (
-        label: toggle,
-        value: getToggleValue(toggle),
-        change: () => _toggleData[toggle] = !getToggleValue(toggle),
-      ),
-  };
+  /// Set the value of a toggle.
+  void _setToggleValue(String key, bool value) => _toggleData[key] = value;
 }

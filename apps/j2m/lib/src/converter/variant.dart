@@ -1,5 +1,5 @@
 import '../converters/dart/dart_classic.dart';
-import 'converter.dart';
+import 'base.dart';
 import 'language_enum.dart';
 
 /// Converter variant for a language.

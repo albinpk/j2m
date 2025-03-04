@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'converter/converter.dart';
+import 'converter/base.dart';
 
 class OutputView extends StatelessWidget {
   const OutputView({required this.converter, super.key});

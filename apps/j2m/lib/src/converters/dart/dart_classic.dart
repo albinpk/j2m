@@ -2,14 +2,13 @@ import 'package:change_case/change_case.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/languages/dart.dart';
 
-import '../../converter/config.dart';
-import '../../converter/converter.dart';
+import '../../converter/base.dart';
 import '../../types.dart';
 
 /// Classic converter for Dart language.
 final class DartClassicConverter extends ConverterBase {
   @override
-  final DartClassicConfig config = DartClassicConfig();
+  late final DartClassicConfig config = DartClassicConfig(this);
 
   @override
   final CodeController controller = CodeController(language: dart);
@@ -25,9 +24,9 @@ final class DartClassicConverter extends ConverterBase {
   }
 
   String _generateClass({required Json json, required String className}) {
-    final isMutable = getToggleValue(DartClassicConfig.mutable);
-    final isAllRequired = getToggleValue(DartClassicConfig.required);
-    final isAllNullable = getToggleValue(DartClassicConfig.nullable);
+    final isMutable = config.mutable();
+    final isRequired = config.required();
+    final isNullable = config.nullable();
 
     final code = StringBuffer(
       'class $className {\n' // class start
@@ -39,7 +38,7 @@ final class DartClassicConverter extends ConverterBase {
     if (json.isNotEmpty) {
       code.writeln('{');
       json.forEach((key, value) {
-        code.writeln('    ${isAllRequired ? 'required ' : ''}this.$key,');
+        code.writeln('    ${isRequired ? 'required ' : ''}this.$key,');
       });
       code.write('  }');
     }
@@ -51,7 +50,7 @@ final class DartClassicConverter extends ConverterBase {
     json.forEach((key, value) {
       final type = _generateField(key, value, classList);
       code.writeln(
-        '  ${isMutable ? '' : 'final '}$type${isAllNullable ? '?' : ''} $key;',
+        '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} $key;',
       );
     });
 
@@ -95,11 +94,12 @@ final class DartClassicConverter extends ConverterBase {
 }
 
 final class DartClassicConfig extends ConfigBase {
-  @override
-  Set<String> get toggles => const {mutable, required, nullable};
+  DartClassicConfig(super.converter);
 
-  // TODO(albin): as instance variables.
-  static const mutable = 'Mutable';
-  static const required = 'Required';
-  static const nullable = 'Nullable';
+  late final mutable = toggle('Mutable');
+  late final required = toggle('Required', initial: true);
+  late final nullable = toggle('Nullable');
+
+  @override
+  Set<Toggle> get toggles => {mutable, required, nullable};
 }

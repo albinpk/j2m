@@ -7,7 +7,7 @@ import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:flutter_highlight/themes/dracula.dart';
 import 'package:highlight/languages/json.dart';
 
-import 'converter/converter.dart';
+import 'converter/base.dart';
 import 'converter/language_enum.dart';
 import 'converter/variant.dart';
 import 'extensions/context_extensions.dart';
@@ -115,10 +115,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   for (final field in _converter.toggles)
                     _buildButton(
-                      label: field.label,
+                      label: field.name,
                       value: field.value,
                       onTap: () {
-                        field.change();
+                        field.toggle();
                         _converter.convert();
                         setState(() {});
                       },
@@ -185,6 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onChangeLanguage(Language lang) {
+    if (lang == _language) return;
     setState(() {
       _language = lang;
       _variant = Variant.ofLanguage(lang).first;
@@ -206,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextButton _buildButton({
     required String label,
     required bool value,
-    required VoidCallback? onTap,
+    required VoidCallback onTap,
   }) {
     return TextButton(
       onPressed: onTap,
@@ -214,10 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(label),
-          Checkbox(
-            value: value,
-            onChanged: onTap == null ? null : (value) => onTap.call(),
-          ),
+          Checkbox(value: value, onChanged: (_) => onTap()),
         ],
       ),
     );
@@ -231,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final json = jsonDecode(text);
       _inputController.fullText = _encoder.convert(json);
       _converter
-        ..setData(json)
+        ..setJson(json)
         ..convert();
       setState(() {});
     } on FormatException catch (e) {
