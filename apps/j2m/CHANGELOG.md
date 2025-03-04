@@ -1,3 +1,10 @@
+## 0.0.2
+
+ - **FIX**: update favicon paths in index.html for correct loading.
+ - **FEAT**: refactor converter structure and enhance toggle functionality.
+ - **FEAT**: implement Dart classic converter and language support.
+ - **FEAT**: add language support and enhance UI.
+
 ## 0.0.1+1
 
  - **DOCS**: update README.md to enhance project title and link.

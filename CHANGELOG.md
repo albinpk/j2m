@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.2`](#j2m---v002)
+
+---
+
+#### `j2m` - `v0.0.2`
+
+ - **FIX**: update favicon paths in index.html for correct loading.
+ - **FEAT**: refactor converter structure and enhance toggle functionality.
+ - **FEAT**: implement Dart classic converter and language support.
+ - **FEAT**: add language support and enhance UI.
+
+
 ## 2025-03-03
 
 ### Changes
