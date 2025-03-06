@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.3`](#j2m---v003)
+
+---
+
+#### `j2m` - `v0.0.3`
+
+ - **REFACTOR**: enhance toggle functionality with onChange callbacks.
+ - **FIX**: handle empty JSON input in DartClassicConverter.
+ - **FEAT**: add equality toggle in DartClassicConverter.
+ - **FEAT**: update DartClassicConverter to include import for immutable annotation.
+ - **FEAT**: add immutable annotation support in DartClassicConverter.
+ - **FEAT**: add copyWith toggle to DartClassicConverter.
+ - **FEAT**: add toString toggle for dart classic.
+ - **FEAT**: enhance toggle functionality and validation in converter classes.
+
+
 ## 2025-03-04
 
 ### Changes

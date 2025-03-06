@@ -1,3 +1,14 @@
+## 0.0.3
+
+ - **REFACTOR**: enhance toggle functionality with onChange callbacks.
+ - **FIX**: handle empty JSON input in DartClassicConverter.
+ - **FEAT**: add equality toggle in DartClassicConverter.
+ - **FEAT**: update DartClassicConverter to include import for immutable annotation.
+ - **FEAT**: add immutable annotation support in DartClassicConverter.
+ - **FEAT**: add copyWith toggle to DartClassicConverter.
+ - **FEAT**: add toString toggle for dart classic.
+ - **FEAT**: enhance toggle functionality and validation in converter classes.
+
 ## 0.0.2
 
  - **FIX**: update favicon paths in index.html for correct loading.
