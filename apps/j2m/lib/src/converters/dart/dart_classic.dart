@@ -24,6 +24,8 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
   }
 
   String _generateClass({required Json json, required String className}) {
+    if (json.isEmpty) return '';
+
     final isMutable = config.mutable();
     final isRequired = config.required();
     final isNullable = config.nullable();
@@ -31,29 +33,26 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final copyWith = config.copyWith();
     final equality = config.equality();
 
-    final code = StringBuffer(
-        isMutable
-            ? ''
-            : "import 'package:flutter/foundation.dart';\n\n"
-                '@immutable\n',
-      )
-      // class start
-      ..write(
-        'class $className {\n'
-        // constructor
-        '  ${isMutable ? '' : 'const '}$className(',
-      );
-
-    // constructor params
-    if (json.isNotEmpty) {
-      code.writeln('{');
-      json.forEach((key, value) {
-        code.writeln('    ${isRequired ? 'required ' : ''}this.$key,');
-      });
-      code.write('  }');
-    }
-    code.writeln(');');
-    if (json.isNotEmpty) code.writeln();
+    // TODO(albin): fix repeated imports
+    final code =
+        StringBuffer(
+            isMutable
+                ? ''
+                : "import 'package:flutter/foundation.dart';\n\n"
+                    '@immutable\n',
+          )
+          // class start
+          ..write(
+            'class $className {\n'
+            // constructor
+            '  ${isMutable ? '' : 'const '}$className(',
+          )
+          // constructor params
+          ..writeln('{');
+    json.forEach((key, value) {
+      code.writeln('    ${isRequired ? 'required ' : ''}this.$key,');
+    });
+    code.write('  });\n\n');
 
     // map of keyName => Type
     final types = <String, String>{};
