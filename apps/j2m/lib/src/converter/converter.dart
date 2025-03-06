@@ -52,6 +52,7 @@ abstract class ConverterBase<T extends ConfigBase> {
   }
 
   /// Called when a toggle value is changed.
+  @Deprecated('Use toggle.onChange instead')
   @protected
   // ignore: avoid_positional_boolean_parameters
   void onToggleChange(String key, bool value) {}

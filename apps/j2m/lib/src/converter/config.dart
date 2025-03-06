@@ -10,7 +10,11 @@ abstract class ConfigBase {
   @protected
   abstract final Set<Toggle> toggles;
 
+  /// Create a toggle.
   @protected
-  Toggle toggle(String name, {bool initial = false}) =>
-      Toggle._(name, _converter, initial: initial);
+  Toggle toggle(
+    String name, {
+    bool initial = false,
+    ValueChanged<bool>? onChange,
+  }) => Toggle._(name, _converter, initial: initial, onChange: onChange);
 }

@@ -144,6 +144,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     return type;
   }
 
+  /*
   @override
   void onToggleChange(String key, bool value) {
     if (key == config.mutable.name) {
@@ -169,17 +170,48 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       }
     }
   }
+  */
 }
 
 final class DartClassicConfig extends ConfigBase {
   DartClassicConfig(super.converter);
 
-  late final mutable = toggle('Mutable');
-  late final required = toggle('Required', initial: true);
-  late final nullable = toggle('Nullable');
-  late final stringify = toggle('toString');
-  late final copyWith = toggle('copyWith');
-  late final equality = toggle('Equality');
+  late final Toggle mutable = toggle(
+    'Mutable',
+    onChange: (value) {
+      if (value) {
+        equality.value = false;
+        if (!nullable.value) required.value = true;
+      } else if (!nullable.value) {
+        required.value = true;
+      }
+    },
+  );
+
+  late final Toggle required = toggle(
+    'Required',
+    initial: true,
+    onChange: (value) {
+      if (!value) nullable.value = true;
+    },
+  );
+
+  late final Toggle nullable = toggle(
+    'Nullable',
+    onChange: (value) {
+      if (!value) required.value = true;
+    },
+  );
+  late final Toggle stringify = toggle('toString');
+
+  late final Toggle copyWith = toggle('copyWith');
+
+  late final Toggle equality = toggle(
+    'Equality',
+    onChange: (value) {
+      if (value) mutable.value = false;
+    },
+  );
 
   @override
   Set<Toggle> get toggles => {
