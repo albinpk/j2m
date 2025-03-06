@@ -27,6 +27,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final isMutable = config.mutable();
     final isRequired = config.required();
     final isNullable = config.nullable();
+    final toString = config.stringify();
 
     final code = StringBuffer(
       'class $className {\n' // class start
@@ -53,6 +54,18 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} $key;',
       );
     });
+
+    // toString
+    if (toString) {
+      code
+        ..writeln('\n  @override')
+        ..writeln(
+          '  String toString() =>\n'
+          "      '$className('\n"
+          "      ${json.keys.map((e) => "' $e: \$$e").join(",'\n      ")}'\n"
+          "      ')';",
+        );
+    }
 
     code.writeln('}'); // class end
 
@@ -120,7 +133,8 @@ final class DartClassicConfig extends ConfigBase {
   late final mutable = toggle('Mutable');
   late final required = toggle('Required', initial: true);
   late final nullable = toggle('Nullable');
+  late final stringify = toggle('toString');
 
   @override
-  Set<Toggle> get toggles => {mutable, required, nullable};
+  Set<Toggle> get toggles => {mutable, required, nullable, stringify};
 }
