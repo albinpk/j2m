@@ -29,6 +29,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final isNullable = config.nullable();
     final toString = config.stringify();
     final copyWith = config.copyWith();
+    final equality = config.equality();
 
     final code = StringBuffer(
         isMutable
@@ -39,9 +40,9 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       // class start
       ..write(
         'class $className {\n'
-      // constructor
-      '  ${isMutable ? '' : 'const '}$className(',
-    );
+        // constructor
+        '  ${isMutable ? '' : 'const '}$className(',
+      );
 
     // constructor params
     if (json.isNotEmpty) {
@@ -90,6 +91,21 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       );
     }
 
+    // equality
+    if (equality) {
+      code.writeln(
+        '\n  @override\n'
+        '  bool operator ==(Object other) {\n'
+        '    if (identical(this, other)) return true;\n'
+        '    return other is $className &&\n'
+        '        ${json.keys.map((e) => 'other.$e == $e').join(' &&\n        ')};\n'
+        '  }\n\n'
+        '  @override\n'
+        '  int get hashCode =>\n'
+        '      ${json.keys.map((e) => '$e.hashCode').join(' ^\n      ')};',
+      );
+    }
+
     code.writeln('}'); // class end
 
     // sub models
@@ -135,6 +151,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         if (!config.nullable.value) {
           config.required.value = true;
         }
+        config.equality.value = false;
       } else if (!config.nullable.value) {
         config.required.value = true;
       }
@@ -145,6 +162,10 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     } else if (key == config.nullable.name) {
       if (!value) {
         config.required.value = true;
+      }
+    } else if (key == config.equality.name) {
+      if (value) {
+        config.mutable.value = false;
       }
     }
   }
@@ -158,7 +179,15 @@ final class DartClassicConfig extends ConfigBase {
   late final nullable = toggle('Nullable');
   late final stringify = toggle('toString');
   late final copyWith = toggle('copyWith');
+  late final equality = toggle('Equality');
 
   @override
-  Set<Toggle> get toggles => {mutable, required, nullable, stringify, copyWith};
+  Set<Toggle> get toggles => {
+    mutable,
+    required,
+    nullable,
+    stringify,
+    copyWith,
+    equality,
+  };
 }
