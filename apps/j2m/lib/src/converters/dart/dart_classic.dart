@@ -30,8 +30,10 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final toString = config.stringify();
     final copyWith = config.copyWith();
 
-    final code = StringBuffer(
-      'class $className {\n' // class start
+    final code = StringBuffer(isMutable ? '' : '@immutable\n')
+      // class start
+      ..write(
+        'class $className {\n'
       // constructor
       '  ${isMutable ? '' : 'const '}$className(',
     );
