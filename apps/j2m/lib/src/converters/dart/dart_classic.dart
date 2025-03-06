@@ -28,6 +28,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final isRequired = config.required();
     final isNullable = config.nullable();
     final toString = config.stringify();
+    final copyWith = config.copyWith();
 
     final code = StringBuffer(
       'class $className {\n' // class start
@@ -46,10 +47,14 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     code.writeln(');');
     if (json.isNotEmpty) code.writeln();
 
+    // map of keyName => Type
+    final types = <String, String>{};
+
     // fields
     final classList = <String>[];
     json.forEach((key, value) {
       final type = _generateField(key, value, classList);
+      types[key] = type;
       code.writeln(
         '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} $key;',
       );
@@ -65,6 +70,17 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
           "      ${json.keys.map((e) => "' $e: \$$e").join(",'\n      ")}'\n"
           "      ')';",
         );
+    }
+
+    // copyWith
+    if (copyWith) {
+      code.writeln(
+        '\n  $className copyWith({\n'
+        '    ${json.keys.map((e) => '${types[e]}? $e,').join('\n    ')}\n'
+        '  }) => $className(\n'
+        '    ${json.keys.map((e) => '$e: $e ?? this.$e,').join('\n    ')}\n'
+        '  );',
+      );
     }
 
     code.writeln('}'); // class end
@@ -134,7 +150,8 @@ final class DartClassicConfig extends ConfigBase {
   late final required = toggle('Required', initial: true);
   late final nullable = toggle('Nullable');
   late final stringify = toggle('toString');
+  late final copyWith = toggle('copyWith');
 
   @override
-  Set<Toggle> get toggles => {mutable, required, nullable, stringify};
+  Set<Toggle> get toggles => {mutable, required, nullable, stringify, copyWith};
 }
