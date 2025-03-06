@@ -1,12 +1,12 @@
 part of 'base.dart';
 
 /// Base class for all converters.
-abstract class ConverterBase {
+abstract class ConverterBase<T extends ConfigBase> {
   ConverterBase();
 
   /// Language configuration for the converter.
   @protected
-  abstract final ConfigBase config;
+  abstract final T config;
 
   /// Code controller for the output view.
   abstract final CodeController controller;
@@ -34,11 +34,25 @@ abstract class ConverterBase {
   Set<Toggle> get toggles => config.toggles;
 
   /// Data for toggles.
-  final _toggleData = <String, bool>{};
+  final Map<String, bool> _toggleData = {};
 
   /// Get the current value of a toggle.
   bool? _getToggleValue(String key) => _toggleData[key];
 
+  bool _validating = false;
+
   /// Set the value of a toggle.
-  void _setToggleValue(String key, bool value) => _toggleData[key] = value;
+  void _setToggleValue(String key, bool value) {
+    if (!_validating) {
+      _validating = true;
+      onToggleChange(key, value);
+      _validating = false;
+    }
+    _toggleData[key] = value;
+  }
+
+  /// Called when a toggle value is changed.
+  @protected
+  // ignore: avoid_positional_boolean_parameters
+  void onToggleChange(String key, bool value) {}
 }

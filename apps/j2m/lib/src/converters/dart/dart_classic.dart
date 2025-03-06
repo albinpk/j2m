@@ -6,7 +6,7 @@ import '../../converter/base.dart';
 import '../../types.dart';
 
 /// Classic converter for Dart language.
-final class DartClassicConverter extends ConverterBase {
+final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
   @override
   late final DartClassicConfig config = DartClassicConfig(this);
 
@@ -90,6 +90,27 @@ final class DartClassicConverter extends ConverterBase {
         type = 'dynamic';
     }
     return type;
+  }
+
+  @override
+  void onToggleChange(String key, bool value) {
+    if (key == config.mutable.name) {
+      if (value) {
+        if (!config.nullable.value) {
+          config.required.value = true;
+        }
+      } else if (!config.nullable.value) {
+        config.required.value = true;
+      }
+    } else if (key == config.required.name) {
+      if (!value) {
+        config.nullable.value = true;
+      }
+    } else if (key == config.nullable.name) {
+      if (!value) {
+        config.required.value = true;
+      }
+    }
   }
 }
 
