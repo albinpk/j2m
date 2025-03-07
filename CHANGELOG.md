@@ -15,6 +15,28 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`j2m` - `v0.0.4`](#j2m---v004)
+
+---
+
+#### `j2m` - `v0.0.4`
+
+ - **FIX**: imports in dart classic.
+ - **FEAT**: add model name input to converter and update class name usage.
+
+
+## 2025-03-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`j2m` - `v0.0.3`](#j2m---v003)
 
 ---

@@ -1,3 +1,8 @@
+## 0.0.4
+
+ - **FIX**: imports in dart classic.
+ - **FEAT**: add model name input to converter and update class name usage.
+
 ## 0.0.3
 
  - **REFACTOR**: enhance toggle functionality with onChange callbacks.
