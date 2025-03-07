@@ -1,4 +1,5 @@
 import 'package:change_case/change_case.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/languages/dart.dart';
 
@@ -15,15 +16,25 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
 
   @override
   void convert() {
-    final json = data;
-    if (json is Json) {
-      controller.fullText = _generateClass(json: json, className: 'Model');
-    } else if (json case [final Json item, ...]) {
-      controller.fullText = _generateClass(json: item, className: 'Model');
+    if (data case final Json json || [final Json json, ...]) {
+      final importList = <String>{}; // mutable
+      final code = _generateClass(
+        json: json,
+        className: 'Model',
+        importList: importList,
+      );
+      controller.fullText =
+          importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+    } else {
+      debugPrint('Invalid data type "${data.runtimeType}"');
     }
   }
 
-  String _generateClass({required Json json, required String className}) {
+  String _generateClass({
+    required Json json,
+    required String className,
+    required Set<String> importList,
+  }) {
     if (json.isEmpty) return '';
 
     final isMutable = config.mutable();
@@ -33,14 +44,12 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final copyWith = config.copyWith();
     final equality = config.equality();
 
-    // TODO(albin): fix repeated imports
+    if (!isMutable) {
+      importList.add("import 'package:flutter/foundation.dart';");
+    }
+
     final code =
-        StringBuffer(
-            isMutable
-                ? ''
-                : "import 'package:flutter/foundation.dart';\n\n"
-                    '@immutable\n',
-          )
+        StringBuffer(isMutable ? '' : '@immutable\n')
           // class start
           ..write(
             'class $className {\n'
@@ -60,7 +69,12 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     // fields
     final classList = <String>[];
     json.forEach((key, value) {
-      final type = _generateField(key, value, classList);
+      final type = _generateField(
+        key: key,
+        value: value,
+        classList: classList,
+        importList: importList,
+      );
       types[key] = type;
       code.writeln(
         '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} $key;',
@@ -117,7 +131,12 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
   }
 
   /// Generate a field and return its type.
-  String _generateField(String key, dynamic value, List<String> classList) {
+  String _generateField({
+    required String key,
+    required dynamic value,
+    required List<String> classList,
+    required Set<String> importList,
+  }) {
     final String type;
     switch (value) {
       case int():
@@ -130,12 +149,19 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         type = 'String';
       case Json():
         type = key.toPascalCase();
-        classList.add(_generateClass(json: value, className: type));
+        classList.add(
+          _generateClass(json: value, className: type, importList: importList),
+        );
       case List():
         final generic =
             value.isEmpty
                 ? 'dynamic'
-                : _generateField(key, value[0], classList);
+                : _generateField(
+                  key: key,
+                  value: value[0],
+                  classList: classList,
+                  importList: importList,
+                );
         type = 'List<$generic>';
       default:
         type = 'dynamic';
