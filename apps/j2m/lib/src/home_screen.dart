@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -22,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final _modelNameController = TextEditingController(text: 'Model');
+
   final _inputController = CodeController(
     text: '''
 {
@@ -39,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    _modelNameController.dispose();
     _inputController.dispose();
     _converter.dispose();
     super.dispose();
@@ -88,8 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-
                 const Spacer(),
+
+                // variants
                 Row(
                   spacing: 8,
                   children: [
@@ -108,23 +113,41 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
 
             // toggles
-            SizedBox(
-              width: double.infinity,
-              child: Wrap(
-                alignment: WrapAlignment.end,
-                children: [
-                  for (final field in _converter.toggles)
-                    _buildButton(
-                      label: field.name,
-                      value: field.value,
-                      onTap: () {
-                        field.toggle();
-                        _converter.convert();
-                        setState(() {});
-                      },
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // model name input
+                SizedBox(
+                  width: 200,
+                  child: TextField(
+                    controller: _modelNameController,
+                    decoration: const InputDecoration(
+                      hintText: 'ModelName',
+                      border: OutlineInputBorder(),
+                      isDense: true,
                     ),
-                ],
-              ),
+                  ),
+                ),
+
+                // toggles
+                Expanded(
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    children: [
+                      for (final field in _converter.toggles)
+                        _buildButton(
+                          label: field.name,
+                          value: field.value,
+                          onTap: () {
+                            field.toggle();
+                            _converter.convert();
+                            setState(() {});
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
 
@@ -230,6 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _inputController.fullText = _encoder.convert(json);
       _converter
         ..setJson(json)
+        ..modelName = _modelNameController.text.trim()
         ..convert();
       setState(() {});
     } on FormatException catch (e) {

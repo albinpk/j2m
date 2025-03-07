@@ -20,7 +20,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       final importList = <String>{}; // mutable
       final code = _generateClass(
         json: json,
-        className: 'Model',
+        className: modelName,
         importList: importList,
       );
       controller.fullText =

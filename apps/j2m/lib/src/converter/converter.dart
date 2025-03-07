@@ -22,6 +22,9 @@ abstract class ConverterBase<T extends ConfigBase> {
     _data = data;
   }
 
+  /// Name of the root model class.
+  String modelName = 'Model';
+
   /// Converts JSON data to code blocks.
   void convert();
 
