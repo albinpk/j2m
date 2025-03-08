@@ -44,6 +44,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final copyWith = config.copyWith();
     final equality = config.equality();
     final fromJson = config.fromJson();
+    final toJson = config.toJson();
 
     if (!isMutable) {
       importList.add("import 'package:flutter/foundation.dart';");
@@ -117,6 +118,15 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         '  }) => $className(\n'
         '    ${json.keys.map((e) => '$e: $e ?? this.$e,').join('\n    ')}\n'
         '  );',
+      );
+    }
+
+    // toJson
+    if (toJson) {
+      code.writeln(
+        '\n  Map<String, dynamic> toJson() => {\n'
+        '    ${json.keys.map((e) => "'$e': $e,").join("\n    ")}\n'
+        '  };',
       );
     }
 
@@ -256,6 +266,8 @@ final class DartClassicConfig extends ConfigBase {
 
   late final Toggle fromJson = toggle('fromJson');
 
+  late final Toggle toJson = toggle('toJson');
+
   @override
   Set<Toggle> get toggles => {
     mutable,
@@ -265,5 +277,6 @@ final class DartClassicConfig extends ConfigBase {
     copyWith,
     equality,
     fromJson,
+    toJson,
   };
 }
