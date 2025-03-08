@@ -1,3 +1,11 @@
+## 0.0.5
+
+ - **FIX**: replace hideCurrentSnackBar with clearSnackBars in HomeScreen.
+ - **FEAT**: update home screen buttons ui.
+ - **FEAT**: add toJson toggle to DartClassicConverter.
+ - **FEAT**: add fromJson toggle to DartClassicConverter.
+ - **FEAT**: enhance OutputView with horizontal scrolling for TextField.
+
 ## 0.0.4
 
  - **FIX**: imports in dart classic.

@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.5`](#j2m---v005)
+
+---
+
+#### `j2m` - `v0.0.5`
+
+ - **FIX**: replace hideCurrentSnackBar with clearSnackBars in HomeScreen.
+ - **FEAT**: update home screen buttons ui.
+ - **FEAT**: add toJson toggle to DartClassicConverter.
+ - **FEAT**: add fromJson toggle to DartClassicConverter.
+ - **FEAT**: enhance OutputView with horizontal scrolling for TextField.
+
+
 ## 2025-03-07
 
 ### Changes
