@@ -43,6 +43,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final toString = config.stringify();
     final copyWith = config.copyWith();
     final equality = config.equality();
+    final fromJson = config.fromJson();
 
     if (!isMutable) {
       importList.add("import 'package:flutter/foundation.dart';");
@@ -61,13 +62,15 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     json.forEach((key, value) {
       code.writeln('    ${isRequired ? 'required ' : ''}this.$key,');
     });
-    code.write('  });\n\n');
+    code.write('  });\n');
 
     // map of keyName => Type
     final types = <String, String>{};
 
-    // fields
     final classList = <String>[];
+
+    // fields
+    final fieldBuffer = StringBuffer();
     json.forEach((key, value) {
       final type = _generateField(
         key: key,
@@ -76,10 +79,23 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         importList: importList,
       );
       types[key] = type;
-      code.writeln(
+      fieldBuffer.writeln(
         '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} $key;',
       );
     });
+
+    // fromJson
+    if (fromJson) {
+      code.writeln(
+        '\n  factory $className.fromJson(Map<String, dynamic> json) => $className(\n'
+        '    ${json.keys.map((e) => "$e: json['$e'] as ${types[e]}${isNullable ? '?' : ''},").join('\n    ')}\n'
+        '  );',
+      );
+    }
+
+    code
+      ..writeln()
+      ..write(fieldBuffer.toString());
 
     // toString
     if (toString) {
@@ -104,7 +120,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       );
     }
 
-    // equality
+    // equality and hashCode
     if (equality) {
       code.writeln(
         '\n  @override\n'
@@ -238,6 +254,8 @@ final class DartClassicConfig extends ConfigBase {
     },
   );
 
+  late final Toggle fromJson = toggle('fromJson');
+
   @override
   Set<Toggle> get toggles => {
     mutable,
@@ -246,5 +264,6 @@ final class DartClassicConfig extends ConfigBase {
     stringify,
     copyWith,
     equality,
+    fromJson,
   };
 }
