@@ -159,19 +159,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     // input editor
                     Expanded(
-                      child: Column(
+                      child: Stack(
                         children: [
-                          Expanded(
-                            child: InputView(controller: _inputController),
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
+                          InputView(controller: _inputController),
+
+                          // generate button
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: FloatingActionButton(
+                                tooltip: 'Generate',
+                                onPressed: _convert,
+                                child: const Icon(
+                                  Icons.keyboard_double_arrow_right_rounded,
+                                ),
                               ),
-                              onPressed: _convert,
-                              child: const Text('Convert'),
                             ),
                           ),
                         ],
@@ -181,17 +184,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     // output editor
                     Expanded(
-                      child: Column(
+                      child: Stack(
                         children: [
-                          Expanded(child: OutputView(converter: _converter)),
-                          SizedBox(
-                            width: double.infinity,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                shape: const RoundedRectangleBorder(),
+                          OutputView(converter: _converter),
+
+                          // copy button
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: FloatingActionButton(
+                                tooltip: 'Copy',
+                                onPressed: _copy,
+                                child: const Icon(Icons.copy_rounded),
                               ),
-                              onPressed: _copy,
-                              child: const Text('Copy'),
                             ),
                           ),
                         ],
