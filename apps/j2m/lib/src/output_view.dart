@@ -11,15 +11,27 @@ class OutputView extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(border: Border.all(color: Colors.white10)),
-      child: TextField(
-        controller: converter.controller,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.all(8),
-        ),
-        maxLines: null,
-        expands: true,
-        style: const TextStyle(fontFamily: 'RobotoMono'),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: constraints.maxWidth),
+              child: IntrinsicWidth(
+                child: TextField(
+                  controller: converter.controller,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(8),
+                  ),
+                  maxLines: null,
+                  expands: true,
+                  style: const TextStyle(fontFamily: 'RobotoMono'),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
