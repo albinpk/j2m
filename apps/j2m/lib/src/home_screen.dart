@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     } on FormatException catch (e) {
       ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
+        ..clearSnackBars()
         ..showSnackBar(
           SnackBar(content: Text('Error: ${e.message}'), showCloseIcon: true),
         );
@@ -273,7 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (!mounted) return;
     ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
+      ..clearSnackBars()
       ..showSnackBar(
         const SnackBar(
           content: Text('Copied to clipboard!'),
