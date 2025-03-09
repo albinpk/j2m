@@ -54,191 +54,230 @@ class _HomeScreenState extends State<HomeScreen> {
   Variant _variant = Variant.ofLanguage(Language.dart).first;
   late ConverterBase _converter = _variant.converter();
 
+  bool _wrapInputText = false;
   bool _wrapOutputText = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // top bar
-            Row(
-              children: [
-                Text('Json to', style: Theme.of(context).textTheme.titleMedium),
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+    return IconButtonTheme(
+      data: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          foregroundColor: colors.onSurface.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              // top bar
+              Row(
+                children: [
+                  Text('Json to', style: theme.textTheme.titleMedium),
 
-                // language list
-                PopupMenuButton(
-                  borderRadius: BorderRadius.circular(8),
-                  onSelected: _onChangeLanguage,
-                  initialValue: _language,
-                  itemBuilder: (context) {
-                    return Language.values.map((e) {
-                      return PopupMenuItem(value: e, child: Text(e.label));
-                    }).toList();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ).copyWith(right: 2),
-                    child: Row(
-                      children: [
-                        Text(
-                          _language.label,
-                          style: context.tt.titleMedium?.copyWith(
+                  // language list
+                  PopupMenuButton(
+                    borderRadius: BorderRadius.circular(8),
+                    onSelected: _onChangeLanguage,
+                    initialValue: _language,
+                    itemBuilder: (context) {
+                      return Language.values.map((e) {
+                        return PopupMenuItem(value: e, child: Text(e.label));
+                      }).toList();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ).copyWith(right: 2),
+                      child: Row(
+                        children: [
+                          Text(
+                            _language.label,
+                            style: context.tt.titleMedium?.copyWith(
+                              color: context.cs.primary,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
                             color: context.cs.primary,
                           ),
-                        ),
-                        Icon(Icons.arrow_drop_down, color: context.cs.primary),
-                      ],
-                    ),
-                  ),
-                ),
-                const Spacer(),
-
-                // variants
-                Row(
-                  spacing: 8,
-                  children: [
-                    for (final v in Variant.ofLanguage(_language))
-                      ChoiceChip(
-                        label: Text(v.name),
-                        selected: _variant == v,
-                        onSelected: (value) {
-                          if (value) _onChangeVariant(v);
-                        },
+                        ],
                       ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            // toggles
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // model name input
-                SizedBox(
-                  width: 200,
-                  child: TextField(
-                    controller: _modelNameController,
-                    decoration: const InputDecoration(
-                      hintText: 'Model name',
-                      border: OutlineInputBorder(),
-                      isDense: true,
                     ),
                   ),
-                ),
+                  const Spacer(),
 
-                // toggles
-                Expanded(
-                  child: Wrap(
-                    alignment: WrapAlignment.end,
+                  // variants
+                  Row(
+                    spacing: 8,
                     children: [
-                      for (final field in _converter.toggles)
-                        _buildButton(
-                          label: field.name,
-                          value: field.value,
-                          onTap: () {
-                            field.toggle();
-                            _converter.convert();
-                            setState(() {});
+                      for (final v in Variant.ofLanguage(_language))
+                        ChoiceChip(
+                          label: Text(v.name),
+                          selected: _variant == v,
+                          onSelected: (value) {
+                            if (value) _onChangeVariant(v);
                           },
                         ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
+                ],
+              ),
+              const SizedBox(height: 10),
 
-            // editor
-            Expanded(
-              child: CodeTheme(
-                data: CodeThemeData(styles: draculaTheme),
-                child: Row(
-                  children: [
-                    // input editor
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          InputView(controller: _inputController),
+              // toggles
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // model name input
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      controller: _modelNameController,
+                      decoration: const InputDecoration(
+                        hintText: 'Model name',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                    ),
+                  ),
 
-                          // generate button, bottom right
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: FloatingActionButton(
-                                tooltip: 'Generate',
-                                onPressed: _convert,
-                                child: const Icon(
-                                  Icons.keyboard_double_arrow_right_rounded,
+                  // toggles
+                  Expanded(
+                    child: Wrap(
+                      alignment: WrapAlignment.end,
+                      children: [
+                        for (final field in _converter.toggles)
+                          _buildButton(
+                            label: field.name,
+                            value: field.value,
+                            onTap: () {
+                              field.toggle();
+                              _converter.convert();
+                              setState(() {});
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // editor
+              Expanded(
+                child: CodeTheme(
+                  data: CodeThemeData(styles: draculaTheme),
+                  child: Row(
+                    children: [
+                      // input editor
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            InputView(
+                              controller: _inputController,
+                              wrapText: _wrapInputText,
+                            ),
+
+                            // generate button, bottom right
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: FloatingActionButton(
+                                  tooltip: 'Generate',
+                                  onPressed: _convert,
+                                  child: const Icon(
+                                    Icons.keyboard_double_arrow_right_rounded,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
 
-                          // copy input, top right
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              tooltip: 'Copy',
-                              onPressed: _copyInput,
-                              icon: const Icon(Icons.copy_rounded),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 14),
+                            // top right
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // copy input
+                                  IconButton(
+                                    tooltip: 'Copy',
+                                    onPressed: _copyInput,
+                                    icon: const Icon(Icons.copy_rounded),
+                                  ),
 
-                    // output editor
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          OutputView(
-                            converter: _converter,
-                            wrapText: _wrapOutputText,
-                          ),
-
-                          // copy button
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: FloatingActionButton(
-                                tooltip: 'Copy',
-                                onPressed: _copyOutput,
-                                child: const Icon(Icons.copy_rounded),
+                                  // text wrap
+                                  IconButton(
+                                    tooltip: 'Wrap text',
+                                    color:
+                                        _wrapInputText
+                                            ? colors.onSurface
+                                            : null,
+                                    onPressed: () {
+                                      setState(
+                                        () => _wrapInputText = !_wrapInputText,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.wrap_text_rounded),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-
-                          // text wrap button
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              tooltip: 'Wrap text',
-                              onPressed: () {
-                                setState(
-                                  () => _wrapOutputText = !_wrapOutputText,
-                                );
-                              },
-                              icon: const Icon(Icons.wrap_text_rounded),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 14),
+
+                      // output editor
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            OutputView(
+                              converter: _converter,
+                              wrapText: _wrapOutputText,
+                            ),
+
+                            // copy button
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: FloatingActionButton(
+                                  tooltip: 'Copy',
+                                  onPressed: _copyOutput,
+                                  child: const Icon(Icons.copy_rounded),
+                                ),
+                              ),
+                            ),
+
+                            // text wrap button
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                tooltip: 'Wrap text',
+                                color:
+                                    _wrapOutputText ? colors.onSurface : null,
+                                onPressed: () {
+                                  setState(
+                                    () => _wrapOutputText = !_wrapOutputText,
+                                  );
+                                },
+                                icon: const Icon(Icons.wrap_text_rounded),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -27,7 +27,7 @@ class OutputView extends StatelessWidget {
       decoration: BoxDecoration(border: Border.all(color: Colors.white10)),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (!wrapText) return textField;
+          if (wrapText) return textField;
 
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
