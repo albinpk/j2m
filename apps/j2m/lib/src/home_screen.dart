@@ -54,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Variant _variant = Variant.ofLanguage(Language.dart).first;
   late ConverterBase _converter = _variant.converter();
 
+  bool _wrapOutputText = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,7 +200,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: Stack(
                         children: [
-                          OutputView(converter: _converter),
+                          OutputView(
+                            converter: _converter,
+                            wrapText: _wrapOutputText,
+                          ),
 
                           // copy button
                           Align(
@@ -210,6 +215,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                 onPressed: _copyOutput,
                                 child: const Icon(Icons.copy_rounded),
                               ),
+                            ),
+                          ),
+
+                          // text wrap button
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              tooltip: 'Wrap text',
+                              onPressed: () {
+                                setState(
+                                  () => _wrapOutputText = !_wrapOutputText,
+                                );
+                              },
+                              icon: const Icon(Icons.wrap_text_rounded),
                             ),
                           ),
                         ],
