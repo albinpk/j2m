@@ -15,19 +15,21 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
   final CodeController controller = CodeController(language: dart);
 
   @override
+  String propCasing(String prop) => prop.toCamelCase();
+
+  @override
+  String classCasing(String className) => className.toPascalCase();
+
+  @override
   void convert() {
-    if (data case final Json json || [final Json json, ...]) {
-      final importList = <String>{}; // mutable
-      final code = _generateClass(
-        json: json,
-        className: modelName,
-        importList: importList,
-      );
-      controller.fullText =
-          importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
-    } else {
-      debugPrint('Invalid data type "${data.runtimeType}"');
-    }
+    final importList = <String>{}; // mutable
+    final code = _generateClass(
+      json: json,
+      className: modelName,
+      importList: importList,
+    );
+    controller.fullText =
+        importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
   }
 
   String _generateClass({
@@ -73,14 +75,13 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       if (fromJson) "part '$fileName.g.dart';",
     ]);
 
-    final code = StringBuffer(
-      '$annotation\n'
-      'abstract class $className with _\$$className {\n',
-    );
-
     final classList = <String>[];
 
-    code.write('  ${mutable ? '' : 'const '}factory $className({\n');
+    final code = StringBuffer(
+      '$annotation\n'
+      'abstract class $className with _\$$className {\n'
+      '  ${mutable ? '' : 'const '}factory $className({\n',
+    );
 
     // fields
     json.forEach((key, value) {
@@ -91,7 +92,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
         importList: importList,
       );
       code.writeln(
-        '    ${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} $key,',
+        '    ${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
       );
     });
     code.writeln('  }) = _$className;'); // constructor end
