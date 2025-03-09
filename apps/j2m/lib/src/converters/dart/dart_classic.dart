@@ -1,5 +1,4 @@
 import 'package:change_case/change_case.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_code_editor/flutter_code_editor.dart';
 import 'package:highlight/languages/dart.dart';
 
@@ -15,19 +14,21 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
   final CodeController controller = CodeController(language: dart);
 
   @override
+  String propCasing(String prop) => prop.toCamelCase();
+
+  @override
+  String classCasing(String className) => className.toPascalCase();
+
+  @override
   void convert() {
-    if (data case final Json json || [final Json json, ...]) {
-      final importList = <String>{}; // mutable
-      final code = _generateClass(
-        json: json,
-        className: modelName,
-        importList: importList,
-      );
-      controller.fullText =
-          importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
-    } else {
-      debugPrint('Invalid data type "${data.runtimeType}"');
-    }
+    final importList = <String>{}; // mutable
+    final code = _generateClass(
+      json: json,
+      className: modelName,
+      importList: importList,
+    );
+    controller.fullText =
+        importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
   }
 
   String _generateClass({
@@ -60,8 +61,13 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
           )
           // constructor params
           ..writeln('{');
+
+    // map of keyName => propertyName
+    final prop = getPropName(json);
+    final props = prop.values.toList();
+
     json.forEach((key, value) {
-      code.writeln('    ${isRequired ? 'required ' : ''}this.$key,');
+      code.writeln('    ${isRequired ? 'required ' : ''}this.${prop[key]},');
     });
     code.write('  });\n');
 
@@ -81,15 +87,17 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       );
       types[key] = type;
       fieldBuffer.writeln(
-        '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} $key;',
+        '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} ${prop[key]};',
       );
     });
+
+    final keys = json.keys.toList();
 
     // fromJson
     if (fromJson) {
       code.writeln(
         '\n  factory $className.fromJson(Map<String, dynamic> json) => $className(\n'
-        '    ${json.keys.map((e) => "$e: json['$e'] as ${types[e]}${isNullable ? '?' : ''},").join('\n    ')}\n'
+        '    ${keys.map((e) => "${prop[e]}: json['$e'] as ${types[e]}${isNullable ? '?' : ''},").join('\n    ')}\n'
         '  );',
       );
     }
@@ -105,7 +113,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         ..writeln(
           '  String toString() =>\n'
           "      '$className('\n"
-          "      ${json.keys.map((e) => "' $e: \$$e").join(",'\n      ")}'\n"
+          "      ${props.map((e) => "' $e: \$$e").join(",'\n      ")}'\n"
           "      ')';",
         );
     }
@@ -114,9 +122,9 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     if (copyWith) {
       code.writeln(
         '\n  $className copyWith({\n'
-        '    ${json.keys.map((e) => '${types[e]}? $e,').join('\n    ')}\n'
+        '    ${keys.map((e) => '${types[e]}? ${prop[e]},').join('\n    ')}\n'
         '  }) => $className(\n'
-        '    ${json.keys.map((e) => '$e: $e ?? this.$e,').join('\n    ')}\n'
+        '    ${props.map((e) => '$e: $e ?? this.$e,').join('\n    ')}\n'
         '  );',
       );
     }
@@ -125,7 +133,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     if (toJson) {
       code.writeln(
         '\n  Map<String, dynamic> toJson() => {\n'
-        '    ${json.keys.map((e) => "'$e': $e,").join("\n    ")}\n'
+        '    ${keys.map((e) => "'$e': ${prop[e]},").join("\n    ")}\n'
         '  };',
       );
     }
@@ -137,11 +145,11 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
         '  bool operator ==(Object other) {\n'
         '    if (identical(this, other)) return true;\n'
         '    return other is $className &&\n'
-        '        ${json.keys.map((e) => 'other.$e == $e').join(' &&\n        ')};\n'
+        '        ${props.map((e) => 'other.$e == $e').join(' &&\n        ')};\n'
         '  }\n\n'
         '  @override\n'
         '  int get hashCode =>\n'
-        '      ${json.keys.map((e) => '$e.hashCode').join(' ^\n      ')};',
+        '      ${props.map((e) => '$e.hashCode').join(' ^\n      ')};',
       );
     }
 
@@ -165,14 +173,8 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
   }) {
     final String type;
     switch (value) {
-      case int():
-        type = 'int';
-      case double():
-        type = 'double';
-      case bool():
-        type = 'bool';
-      case String():
-        type = 'String';
+      case int() || double() || bool() || String():
+        type = value.runtimeType.toString();
       case Json():
         type = key.toPascalCase();
         classList.add(

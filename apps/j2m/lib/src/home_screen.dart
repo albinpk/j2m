@@ -23,7 +23,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _modelNameController = TextEditingController(text: 'Model');
+  final _modelNameController = TextEditingController(
+    text: ConverterBase.defaultModelName,
+  );
 
   final _inputController = CodeController(
     text: '''
@@ -122,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: TextField(
                     controller: _modelNameController,
                     decoration: const InputDecoration(
-                      hintText: 'ModelName',
+                      hintText: 'Model name',
                       border: OutlineInputBorder(),
                       isDense: true,
                     ),
@@ -258,8 +260,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final json = jsonDecode(text);
       _inputController.fullText = _encoder.convert(json);
       _converter
-        ..setJson(json)
-        ..modelName = _modelNameController.text.trim()
+        ..setJsonFromDecoded(json)
+        ..modelName = _modelNameController.text
         ..convert();
       setState(() {});
     } on FormatException catch (e) {

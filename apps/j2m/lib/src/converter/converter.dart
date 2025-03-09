@@ -12,21 +12,77 @@ abstract class ConverterBase<T extends ConfigBase> {
   abstract final CodeController controller;
 
   /// JSON data to convert.
+  @Deprecated('Use "_json" instead')
   dynamic _data;
 
   /// The JSON data to convert.
+  @Deprecated('Use "json" instead')
   dynamic get data => _data;
 
-  void setJson(dynamic data) {
+  @Deprecated('Use "" instead')
+  void setJsonOld(dynamic data) {
     assert(data is Map || data is List, 'Invalid data type');
     _data = data;
   }
 
+  /// JSON data to convert.
+  Json? _json;
+
+  /// Set JSON data to convert.
+  // ignore: use_setters_to_change_properties
+  void setJson(Json json) => _json = json;
+
+  /// JSON data to convert.
+  Json get json {
+    assert(_json != null, 'JSON data is not set');
+    return _json!;
+  }
+
+  /// Set JSON data from a string.
+  void setJsonFromString(String text) {
+    final data = jsonDecode(text);
+    setJsonFromDecoded(data);
+  }
+
+  /// Set JSON data from decoded data.
+  void setJsonFromDecoded(dynamic data) {
+    if (data case final Json json || [final Json json, ...]) {
+      setJson(json);
+    } else {
+      throw const FormatException('Invalid JSON data');
+    }
+  }
+
+  /// Default name of the root model class if not set.
+  static const defaultModelName = 'Model';
+
   /// Name of the root model class.
-  String modelName = 'Model';
+  String? _modelName;
+
+  /// Name of the root model class.
+  String get modelName {
+    if (_modelName == null) modelName = defaultModelName;
+    return _modelName!;
+  }
+
+  /// Name of the root model class.
+  set modelName(String value) {
+    final name = value.trim();
+    _modelName = classCasing(name.isEmpty ? defaultModelName : name);
+  }
 
   /// Converts JSON data to code blocks.
   void convert();
+
+  /// Casing for property names.
+  String propCasing(String prop) => prop;
+
+  /// Casing for class names.
+  String classCasing(String className) => className;
+
+  /// Get a map of property names and their casing.
+  Map<String, String> getPropName(Json json) =>
+      json.map((key, value) => MapEntry(key, propCasing(key)));
 
   @mustCallSuper
   void dispose() {
