@@ -49,8 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Language _language = Language.dart;
-  Variant _variant = Variant.dartClassic;
-  ConverterBase _converter = Variant.dartClassic.converter();
+  Variant _variant = Variant.ofLanguage(Language.dart).first;
+  late ConverterBase _converter = _variant.converter();
 
   @override
   Widget build(BuildContext context) {

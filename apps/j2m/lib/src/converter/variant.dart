@@ -1,4 +1,5 @@
 import '../converters/dart/dart_classic.dart';
+import '../converters/dart/dart_freezed.dart';
 import 'base.dart';
 import 'language_enum.dart';
 
@@ -15,14 +16,11 @@ class Variant {
   /// Get variants for [language].
   static Set<Variant> ofLanguage(Language language) => _variantsMap[language]!;
 
-  // extracted for initial value
-  static const Variant dartClassic = Variant(
-    'Classic',
-    DartClassicConverter.new,
-  );
-
   /// All registered variants.
   static const Map<Language, Set<Variant>> _variantsMap = {
-    Language.dart: {dartClassic},
+    Language.dart: {
+      Variant('Classic', DartClassicConverter.new),
+      Variant('Freezed', DartFreezedConverter.new),
+    },
   };
 }
