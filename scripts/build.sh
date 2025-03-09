@@ -6,7 +6,12 @@ cd apps/j2m/
 
 fvm flutter clean
 fvm flutter pub get
-fvm flutter build web --base-href=/j2m/
+
+# for gh pages
+# fvm flutter build web --base-href=/j2m/
+
+# for cloudflare
+fvm flutter build web
 
 cd ../../
 
