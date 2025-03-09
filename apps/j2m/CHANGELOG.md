@@ -1,3 +1,12 @@
+## 0.0.6
+
+ - **FEAT**: add wrapText option to InputView for improved text display.
+ - **FEAT**: add text wrapping functionality to output view.
+ - **FEAT**: add copy input and output functionality with improved snackbar messages.
+ - **FEAT**: improve DartFreezedConverter with property and class casing methods.
+ - **FEAT**: enhance JSON handling in ConverterBase and DartClassicConverter.
+ - **FEAT**: add Freezed variant to Dart language support.
+
 ## 0.0.5
 
  - **FIX**: replace hideCurrentSnackBar with clearSnackBars in HomeScreen.
