@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           InputView(controller: _inputController),
 
-                          // generate button
+                          // generate button, bottom right
                           Align(
                             alignment: Alignment.bottomRight,
                             child: Padding(
@@ -177,6 +177,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Icons.keyboard_double_arrow_right_rounded,
                                 ),
                               ),
+                            ),
+                          ),
+
+                          // copy input, top right
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              tooltip: 'Copy',
+                              onPressed: _copyInput,
+                              icon: const Icon(Icons.copy_rounded),
                             ),
                           ),
                         ],
@@ -197,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.all(8),
                               child: FloatingActionButton(
                                 tooltip: 'Copy',
-                                onPressed: _copy,
+                                onPressed: _copyOutput,
                                 child: const Icon(Icons.copy_rounded),
                               ),
                             ),
@@ -275,18 +285,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _copy() async {
+  Future<void> _copyInput() async {
+    await Clipboard.setData(ClipboardData(text: _inputController.fullText));
+    _showSnackbar('Copied to clipboard!');
+  }
+
+  Future<void> _copyOutput() async {
     await Clipboard.setData(
       ClipboardData(text: _converter.controller.fullText),
     );
+    _showSnackbar('Copied to clipboard!');
+  }
+
+  void _showSnackbar(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
-      ..showSnackBar(
-        const SnackBar(
-          content: Text('Copied to clipboard!'),
-          showCloseIcon: true,
-        ),
-      );
+      ..showSnackBar(SnackBar(content: Text(message), showCloseIcon: true));
   }
 }
