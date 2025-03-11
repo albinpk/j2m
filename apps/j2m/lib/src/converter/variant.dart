@@ -1,5 +1,6 @@
 import '../converters/dart/dart_classic.dart';
 import '../converters/dart/dart_freezed.dart';
+import '../converters/js/ts_interface.dart';
 import 'base.dart';
 import 'language_enum.dart';
 
@@ -22,5 +23,6 @@ class Variant {
       Variant('Classic', DartClassicConverter.new),
       Variant('Freezed', DartFreezedConverter.new),
     },
+    Language.javascript: {Variant('Interface', TSInterfaceConverter.new)},
   };
 }

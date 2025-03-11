@@ -1,6 +1,7 @@
 /// All supported languages
 enum Language {
-  dart('Dart');
+  dart('Dart'),
+  javascript('JavaScript');
 
   const Language(this.label);
 
