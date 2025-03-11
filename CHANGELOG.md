@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.7`](#j2m---v007)
+
+---
+
+#### `j2m` - `v0.0.7`
+
+ - **REFACTOR**: update initial json data.
+ - **FIX**: update canonical and Open Graph URLs to reflect new domain.
+ - **FIX**: replace hideCurrentSnackBar with clearSnackBars in HomeScreen.
+ - **FIX**: imports in dart classic.
+ - **FEAT**: convert sample json on startup.
+ - **FEAT**: add info dialog with GitHub and LinkedIn urls.
+ - **FEAT**: add support for JavaScript language and create TypeScript interface converter.
+ - **FEAT**: add wrapText option to InputView for improved text display.
+ - **FEAT**: add text wrapping functionality to output view.
+ - **FEAT**: add copy input and output functionality with improved snackbar messages.
+ - **FEAT**: improve DartFreezedConverter with property and class casing methods.
+ - **FEAT**: enhance JSON handling in ConverterBase and DartClassicConverter.
+ - **FEAT**: add Freezed variant to Dart language support.
+ - **FEAT**: update home screen buttons ui.
+ - **FEAT**: add toJson toggle to DartClassicConverter.
+ - **FEAT**: add fromJson toggle to DartClassicConverter.
+ - **FEAT**: enhance OutputView with horizontal scrolling for TextField.
+ - **FEAT**: add model name input to converter and update class name usage.
+
+
 ## 2025-03-09
 
 ### Changes
