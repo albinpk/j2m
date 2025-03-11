@@ -1,3 +1,11 @@
+## 0.0.7
+
+ - **REFACTOR**: update initial json data.
+ - **FIX**: update canonical and Open Graph URLs to reflect new domain.
+ - **FEAT**: convert sample json on startup.
+ - **FEAT**: add info dialog with GitHub and LinkedIn urls.
+ - **FEAT**: add support for JavaScript language and create TypeScript interface converter.
+
 ## 0.0.6
 
  - **FEAT**: add wrapText option to InputView for improved text display.

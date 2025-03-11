@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.7`](#j2m---v007)
+
+---
+
+#### `j2m` - `v0.0.7`
+
+ - **REFACTOR**: update initial json data.
+ - **FIX**: update canonical and Open Graph URLs to reflect new domain.
+ - **FEAT**: convert sample json on startup.
+ - **FEAT**: add info dialog with GitHub and LinkedIn urls.
+ - **FEAT**: add support for JavaScript language and create TypeScript interface converter.
+
+
 ## 2025-03-09
 
 ### Changes
