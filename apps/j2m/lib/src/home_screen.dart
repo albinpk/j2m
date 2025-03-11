@@ -14,6 +14,7 @@ import 'converter/variant.dart';
 import 'extensions/context_extensions.dart';
 import 'input_view.dart';
 import 'output_view.dart';
+import 'widgets/app_info_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -71,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         body: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20).copyWith(bottom: 0),
           child: Column(
             children: [
               // top bar
@@ -278,6 +279,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+
+              // info
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    tooltip: 'Info',
+                    onPressed: _showInfo,
+                    icon: const Icon(Icons.info_outline),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -362,5 +375,12 @@ class _HomeScreenState extends State<HomeScreen> {
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(SnackBar(content: Text(message), showCloseIcon: true));
+  }
+
+  void _showInfo() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => const AppInfoDialog(),
+    );
   }
 }
