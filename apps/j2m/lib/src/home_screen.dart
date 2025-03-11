@@ -24,6 +24,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future(_convert);
+  }
+
   final _modelNameController = TextEditingController(
     text: ConverterBase.defaultModelName,
   );
