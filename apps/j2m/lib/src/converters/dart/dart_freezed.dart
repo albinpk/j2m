@@ -47,6 +47,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
     final equality = config.equality();
     final fromJson = config.fromJson();
     final toJson = config.toJson();
+    final jsonKey = config.jsonKey();
 
     final fileName = modelName.toSnakeCase();
 
@@ -92,7 +93,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
         importList: importList,
       );
       code.writeln(
-        '    ${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
+        '    ${jsonKey ? '@JsonKey(name: "$key") ' : ''}${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
       );
     });
     code.writeln('  }) = _$className;'); // constructor end
@@ -182,6 +183,8 @@ final class DartFreezedConfig extends ConfigBase {
 
   late final Toggle toJson = toggle('toJson', initial: true);
 
+  late final Toggle jsonKey = toggle('JsonKey');
+
   @override
   Set<Toggle> get toggles => {
     mutable,
@@ -192,5 +195,6 @@ final class DartFreezedConfig extends ConfigBase {
     equality,
     fromJson,
     toJson,
+    jsonKey,
   };
 }
