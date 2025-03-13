@@ -28,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future(_convert);
+
+    // for development
+    // Timer.periodic(const Duration(milliseconds: 200), (t) => _convert());
   }
 
   final _modelNameController = TextEditingController(
@@ -347,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (text.isEmpty) return;
     try {
       final json = jsonDecode(text);
-      _inputController.fullText = _encoder.convert(json);
+      _inputController.fullText = '${_encoder.convert(json)}\n';
       _converter
         ..setJsonFromDecoded(json)
         ..modelName = _modelNameController.text
