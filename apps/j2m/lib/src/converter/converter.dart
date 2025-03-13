@@ -54,16 +54,13 @@ abstract class ConverterBase<T extends ConfigBase> {
   }
 
   /// Default name of the root model class if not set.
-  static const defaultModelName = 'Model';
+  static const defaultModelName = 'User';
 
   /// Name of the root model class.
-  String? _modelName;
+  String _modelName = defaultModelName;
 
   /// Name of the root model class.
-  String get modelName {
-    if (_modelName == null) modelName = defaultModelName;
-    return _modelName!;
-  }
+  String get modelName => _modelName;
 
   /// Name of the root model class.
   set modelName(String value) {

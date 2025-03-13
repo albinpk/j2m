@@ -1,7 +1,8 @@
 /// All supported languages
 enum Language {
   dart('Dart'),
-  javascript('JavaScript');
+  javascript('JavaScript'),
+  kotlin('Kotlin');
 
   const Language(this.label);
 
