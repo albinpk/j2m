@@ -1,3 +1,8 @@
+## 0.0.8
+
+ - **FEAT**: add Kotlin data class converter.
+ - **FEAT**: add JsonKey toggle to DartFreezedConfig.
+
 ## 0.0.7
 
  - **REFACTOR**: update initial json data.
