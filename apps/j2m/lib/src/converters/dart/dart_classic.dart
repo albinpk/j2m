@@ -46,6 +46,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     final equality = config.equality();
     final fromJson = config.fromJson();
     final toJson = config.toJson();
+    final detectDate = config.detectDate();
 
     if (!isMutable) {
       importList.add("import 'package:flutter/foundation.dart';");
@@ -79,12 +80,13 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     // fields
     final fieldBuffer = StringBuffer();
     json.forEach((key, value) {
-      final type = _generateField(
+      var type = _generateField(
         key: key,
         value: value,
         classList: classList,
         importList: importList,
       );
+      if (detectDate && isDate(value)) type = 'DateTime';
       types[key] = type;
       fieldBuffer.writeln(
         '  ${isMutable ? '' : 'final '}$type${isNullable ? '?' : ''} ${prop[key]};',
@@ -97,7 +99,17 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     if (fromJson) {
       code.writeln(
         '\n  factory $className.fromJson(Map<String, dynamic> json) => $className(\n'
-        '    ${keys.map((e) => "${prop[e]}: json['$e'] as ${types[e]}${isNullable ? '?' : ''},").join('\n    ')}\n'
+        '    ${json.entries.map((e) {
+          final k = e.key;
+
+          // for date
+          if (detectDate && isDate(e.value)) {
+            final parser = "DateTime.parse(json['$k'] as String)";
+            return "${prop[k]}: ${isNullable ? "json['$k'] != null ? $parser : null" : parser},";
+          }
+
+          return "${prop[k]}: json['$k'] as ${types[k]}${isNullable ? '?' : ''},";
+        }).join('\n    ')}\n'
         '  );',
       );
     }
@@ -133,7 +145,16 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     if (toJson) {
       code.writeln(
         '\n  Map<String, dynamic> toJson() => {\n'
-        '    ${keys.map((e) => "'$e': ${prop[e]},").join("\n    ")}\n'
+        '    ${json.entries.map((e) {
+          final k = e.key;
+
+          // for date
+          if (detectDate && isDate(e.value)) {
+            return "'$k': ${prop[k]}${isNullable ? '?' : ''}.toIso8601String(),";
+          }
+
+          return "'$k': ${prop[k]},";
+        }).join("\n    ")}\n'
         '  };',
       );
     }
@@ -270,6 +291,8 @@ final class DartClassicConfig extends ConfigBase {
 
   late final Toggle toJson = toggle('toJson');
 
+  late final Toggle detectDate = toggle('Detect Date');
+
   @override
   Set<Toggle> get toggles => {
     mutable,
@@ -280,5 +303,6 @@ final class DartClassicConfig extends ConfigBase {
     equality,
     fromJson,
     toJson,
+    detectDate,
   };
 }
