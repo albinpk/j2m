@@ -12,20 +12,6 @@ abstract class ConverterBase<T extends ConfigBase> {
   abstract final CodeController controller;
 
   /// JSON data to convert.
-  @Deprecated('Use "_json" instead')
-  dynamic _data;
-
-  /// The JSON data to convert.
-  @Deprecated('Use "json" instead')
-  dynamic get data => _data;
-
-  @Deprecated('Use "" instead')
-  void setJsonOld(dynamic data) {
-    assert(data is Map || data is List, 'Invalid data type');
-    _data = data;
-  }
-
-  /// JSON data to convert.
   Json? _json;
 
   /// Set JSON data to convert.
