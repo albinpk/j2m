@@ -48,6 +48,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
     final fromJson = config.fromJson();
     final toJson = config.toJson();
     final jsonKey = config.jsonKey();
+    final detectDate = config.detectDate();
 
     final fileName = modelName.toSnakeCase();
 
@@ -86,12 +87,13 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
 
     // fields
     json.forEach((key, value) {
-      final type = _generateField(
+      var type = _generateField(
         key: key,
         value: value,
         classList: classList,
         importList: importList,
       );
+      if (detectDate && isDate(value)) type = 'DateTime';
       code.writeln(
         '    ${jsonKey ? '@JsonKey(name: "$key") ' : ''}${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
       );
@@ -185,6 +187,8 @@ final class DartFreezedConfig extends ConfigBase {
 
   late final Toggle jsonKey = toggle('JsonKey');
 
+  late final Toggle detectDate = toggle('Detect Date');
+
   @override
   Set<Toggle> get toggles => {
     mutable,
@@ -196,5 +200,6 @@ final class DartFreezedConfig extends ConfigBase {
     fromJson,
     toJson,
     jsonKey,
+    detectDate,
   };
 }

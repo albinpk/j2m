@@ -67,6 +67,9 @@ abstract class ConverterBase<T extends ConfigBase> {
   Map<String, String> getPropName(Json json) =>
       json.map((key, value) => MapEntry(key, propCasing(key)));
 
+  /// Check if a [value] is a date.
+  bool isDate(dynamic value) => DateTime.tryParse('$value') != null;
+
   @mustCallSuper
   void dispose() {
     controller.dispose();
