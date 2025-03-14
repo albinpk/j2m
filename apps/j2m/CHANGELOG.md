@@ -1,3 +1,9 @@
+## 0.0.9
+
+ - **REFACTOR**: remove deprecated JSON data handling in ConverterBase.
+ - **FEAT**: implement date detection in DartClassicConverter.
+ - **FEAT**: add date detection functionality in DartFreezedConverter.
+
 ## 0.0.8
 
  - **FEAT**: add Kotlin data class converter.

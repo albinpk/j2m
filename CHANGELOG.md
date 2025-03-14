@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.9`](#j2m---v009)
+
+---
+
+#### `j2m` - `v0.0.9`
+
+ - **REFACTOR**: remove deprecated JSON data handling in ConverterBase.
+ - **FEAT**: implement date detection in DartClassicConverter.
+ - **FEAT**: add date detection functionality in DartFreezedConverter.
+
+
 ## 2025-03-13
 
 ### Changes
