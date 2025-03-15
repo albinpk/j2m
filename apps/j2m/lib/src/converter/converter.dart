@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'base.dart';
 
 /// Base class for all converters.
@@ -55,7 +56,31 @@ abstract class ConverterBase<T extends ConfigBase> {
   }
 
   /// Converts JSON data to code blocks.
-  void convert();
+  @nonVirtual
+  void convert() {
+    final lines = generateLines();
+    final code = lines.join('\n');
+    controller.fullText = code;
+    _lines = lines.length;
+    _lineOptions = {
+      for (final (i, Line(:option)) in lines.indexed)
+        if (option != null) i: option,
+    };
+  }
+
+  int _lines = 0;
+
+  int get lines => _lines;
+
+  Map<int, Option> _lineOptions = {};
+
+  Map<int, Option> get lineOptions => _lineOptions;
+
+  /// Generate code from JSON data.
+  @protected
+  String generateCode();
+
+  List<Line> generateLines() => [];
 
   /// Casing for property names.
   String propCasing(String prop) => prop;
@@ -101,4 +126,46 @@ abstract class ConverterBase<T extends ConfigBase> {
   @protected
   // ignore: avoid_positional_boolean_parameters
   void onToggleChange(String key, bool value) {}
+}
+
+@immutable
+class Line {
+  const Line(this.text, {this.option});
+
+  final String text;
+  final Option? option;
+
+  static const empty = Line('');
+
+  @override
+  String toString() => text;
+
+  @override
+  bool operator ==(covariant Line other) {
+    if (identical(this, other)) return true;
+    return other.text == text && other.option == option;
+  }
+
+  @override
+  int get hashCode => text.hashCode ^ option.hashCode;
+}
+
+@immutable
+class Option {
+  const Option({this.checkBoxes = const []});
+
+  final List<CheckBoxOption> checkBoxes;
+}
+
+@immutable
+class CheckBoxOption {
+  const CheckBoxOption({
+    required this.label,
+    required this.value,
+    required this.onChange,
+  });
+
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChange;
 }

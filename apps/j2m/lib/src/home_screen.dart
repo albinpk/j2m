@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Future(_convert);
 
     // for development
-    // Timer.periodic(const Duration(milliseconds: 200), (t) => _convert());
+    Timer.periodic(const Duration(milliseconds: 1000), (t) => _convert());
   }
 
   final _modelNameController = TextEditingController(
@@ -40,12 +40,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final _inputController = CodeController(
     text: '''
 {
-  "id": 1,
   "name": "John Doe",
-  "email": "johndoe@example.com",
-  "profile": {
-    "age": 30,
-    "isActive": true
+  "date": "2025-03-14T20:21:22.523235",
+  "some": {
+    "hello": "John Doe",
+    "there": "2025-03-14T20:21:22.523235",
+    "wow": [
+      {
+        "time": "2025-03-14T20:21:22.523235"
+      }
+    ]
   }
 }
 ''',
@@ -63,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Language _language = Language.dart;
-  Variant _variant = Variant.ofLanguage(Language.dart).first;
+  Variant _variant = Variant.ofLanguage(Language.dart).last;
   late ConverterBase _converter = _variant.converter();
 
   bool _wrapInputText = false;
@@ -350,7 +354,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (text.isEmpty) return;
     try {
       final json = jsonDecode(text);
+      final selection = _inputController.selection;
       _inputController.fullText = '${_encoder.convert(json)}\n';
+      _inputController.selection = selection;
       _converter
         ..setJsonFromDecoded(json)
         ..modelName = _modelNameController.text

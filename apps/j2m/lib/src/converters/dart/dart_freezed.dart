@@ -20,24 +20,52 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
   @override
   String classCasing(String className) => className.toPascalCase();
 
+  // @override
+  // void convert() {
+  //   final importList = <String>{}; // mutable
+  //   final code = _generateClass(
+  //     json: json,
+  //     className: modelName,
+  //     importList: importList,
+  //   );
+  //   controller.fullText =
+  //       importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+  // }
+
   @override
-  void convert() {
-    final importList = <String>{}; // mutable
+  String generateCode() {
+    final importList = <Line>{}; // mutable
     final code = _generateClass(
       json: json,
       className: modelName,
+      parent: modelName,
       importList: importList,
     );
-    controller.fullText =
-        importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+    return importList.isNotEmpty
+        ? '${importList.join('\n')}\n\n$code'
+        : code.toString();
   }
 
-  String _generateClass({
+  @override
+  List<Line> generateLines() {
+    final importList = <Line>{}; // mutable
+    final code = _generateClass(
+      json: json,
+      className: modelName,
+      parent: modelName,
+      importList: importList,
+    );
+    // return importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+    return [...importList, Line.empty, ...code];
+  }
+
+  List<Line> _generateClass({
     required Json json,
     required String className,
-    required Set<String> importList,
+    required String parent,
+    required Set<Line> importList,
   }) {
-    if (json.isEmpty) return '';
+    if (json.isEmpty) return [];
 
     final mutable = config.mutable();
     final isRequired = config.required();
@@ -55,7 +83,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
     // create @Freezed annotation
     final annotation = () {
       final fields = <String>{};
-      final unfreezed = {
+      const unfreezed = {
         'equal: false',
         'addImplicitFinal: false',
         'makeCollectionsUnmodifiable: false',
@@ -71,60 +99,102 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       return '@Freezed(\n  ${fields.join(',\n  ')},\n)'; // multi line
     }();
 
-    importList.addAll([
-      "import 'package:freezed_annotation/freezed_annotation.dart';",
-      "\npart '$fileName.freezed.dart';",
-      if (fromJson) "part '$fileName.g.dart';",
-    ]);
+    importList.addAll({
+      const Line(
+        "import 'package:freezed_annotation/freezed_annotation.dart';",
+      ),
+      Line.empty,
+      Line("part '$fileName.freezed.dart';"),
+      if (fromJson) Line("part '$fileName.g.dart';"),
+    });
 
-    final classList = <String>[];
+    final lines = <Line>[
+      Line(annotation),
+      Line('abstract class $className with _\$$className {'),
+      Line('  ${mutable ? '' : 'const '}factory $className({'),
+    ];
 
-    final code = StringBuffer(
-      '$annotation\n'
-      'abstract class $className with _\$$className {\n'
-      '  ${mutable ? '' : 'const '}factory $className({\n',
-    );
+    // final code = StringBuffer();
+
+    final classList = <List<Line>>[];
 
     // fields
     json.forEach((key, value) {
       var type = _generateField(
         key: key,
+        parent: '$parent.$key',
         value: value,
         classList: classList,
         importList: importList,
       );
-      if (detectDate && isDate(value)) type = 'DateTime';
-      code.writeln(
-        '    ${jsonKey ? '@JsonKey(name: "$key") ' : ''}${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
+
+      final context = '$parent.$key';
+
+      Option? option;
+      if (isDate(value)) {
+        option = Option(
+          checkBoxes: [
+            CheckBoxOption(
+              label: 'Use DateTime',
+              value: detectDate,
+              onChange: (value) {
+                print('$context: $value');
+              },
+            ),
+          ],
+        );
+        if (detectDate) type = 'DateTime';
+      }
+      // code.writeln(
+      //   '    ${jsonKey ? '@JsonKey(name: "$key") ' : ''}${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
+      // );
+      lines.add(
+        Line(
+          '    ${jsonKey ? '@JsonKey(name: "$key") ' : ''}${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
+          option: option,
+        ),
       );
     });
-    code.writeln('  }) = _$className;'); // constructor end
+    // code.writeln('  }) = _$className;'); // constructor end
+    lines.add(Line('  }) = _$className;'));
 
     // fromJson
     if (fromJson) {
-      code.writeln(
-        '\n  factory $className.fromJson(Map<String, Object?> json) => '
-        '_\$${className}FromJson(json);',
-      );
+      // code.writeln(
+      //   '\n  factory $className.fromJson(Map<String, Object?> json) => '
+      //   '_\$${className}FromJson(json);',
+      // );
+      lines.addAll([
+        Line.empty,
+        Line(
+          '  factory $className.fromJson(Map<String, Object?> json) => '
+          '_\$${className}FromJson(json);',
+        ),
+      ]);
     }
 
-    code.writeln('}'); // class end
+    // code.writeln('}'); // class end
+    lines.add(const Line('}'));
 
     // sub models
     for (final classDef in classList) {
-      code
-        ..write('\n')
-        ..write(classDef);
+      // code
+      //   ..write('\n')
+      //   ..write(classDef);
+      lines.addAll([Line.empty, ...classDef]);
     }
-    return code.toString();
+    // return code.toString();
+    return lines;
   }
 
   /// Generate a field and return its type.
   String _generateField({
     required String key,
+    required String parent,
     required dynamic value,
-    required List<String> classList,
-    required Set<String> importList,
+    required List<List<Line>> classList,
+    // required List<Line> lines,
+    required Set<Line> importList,
   }) {
     final String type;
     switch (value) {
@@ -133,7 +203,12 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       case Json():
         type = key.toPascalCase();
         classList.add(
-          _generateClass(json: value, className: type, importList: importList),
+          _generateClass(
+            json: value,
+            className: type,
+            importList: importList,
+            parent: parent,
+          ),
         );
       case List():
         final generic =
@@ -141,7 +216,9 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
                 ? 'dynamic'
                 : _generateField(
                   key: key,
+                  parent: parent,
                   value: value[0],
+                  // lines: lines,
                   classList: classList,
                   importList: importList,
                 );
@@ -185,6 +262,7 @@ final class DartFreezedConfig extends ConfigBase {
 
   late final Toggle toJson = toggle('toJson', initial: true);
 
+  // TODO(albin): automatic key (if not camelCase)
   late final Toggle jsonKey = toggle('JsonKey');
 
   late final Toggle detectDate = toggle('Detect Date');
