@@ -1,3 +1,9 @@
+## 0.0.10
+
+ - **REFACTOR**: update default JSON structure.
+ - **FEAT**: enhance FloatingActionButton with extended labels for actions.
+ - **FEAT**: dynamic options for each line of code.
+
 ## 0.0.9
 
  - **REFACTOR**: remove deprecated JSON data handling in ConverterBase.

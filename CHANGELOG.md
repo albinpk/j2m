@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.10`](#j2m---v0010)
+
+---
+
+#### `j2m` - `v0.0.10`
+
+ - **REFACTOR**: update default JSON structure.
+ - **FEAT**: enhance FloatingActionButton with extended labels for actions.
+ - **FEAT**: dynamic options for each line of code.
+
+
 ## 2025-03-14
 
 ### Changes
