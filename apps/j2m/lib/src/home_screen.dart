@@ -40,12 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final _inputController = CodeController(
     text: '''
 {
-  "id": 1,
   "name": "John Doe",
   "email": "johndoe@example.com",
+  "age": 30,
   "profile": {
-    "age": 30,
-    "isActive": true
+    "isActive": true,
+    "create_at": "2023-03-22T00:00:00.000Z"
   }
 }
 ''',
