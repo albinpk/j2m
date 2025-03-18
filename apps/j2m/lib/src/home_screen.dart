@@ -199,12 +199,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.bottomRight,
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
-                                child: FloatingActionButton(
-                                  tooltip: 'Generate',
+                                child: FloatingActionButton.extended(
                                   onPressed: _convert,
-                                  child: const Icon(
+                                  icon: const Icon(
                                     Icons.keyboard_double_arrow_right_rounded,
                                   ),
+                                  label: const Text('Generate'),
                                 ),
                               ),
                             ),
@@ -258,10 +258,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.bottomRight,
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
-                                child: FloatingActionButton(
-                                  tooltip: 'Copy',
+                                child: FloatingActionButton.extended(
                                   onPressed: _copyOutput,
-                                  child: const Icon(Icons.copy_rounded),
+                                  icon: const Icon(Icons.copy_rounded),
+                                  label: const Text('Copy'),
                                 ),
                               ),
                             ),
