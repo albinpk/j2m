@@ -20,15 +20,19 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
   String classCasing(String className) => className.toPascalCase();
 
   @override
-  void convert() {
+  String generateCode() {
     final importList = <String>{}; // mutable
     final code = _generateClass(
       json: json,
       className: modelName,
       importList: importList,
     );
-    controller.fullText =
-        importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+    return importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+  }
+
+  @override
+  List<Line> generateLines() {
+    return generateCode().split('\n').map(Line.new).toList();
   }
 
   String _generateClass({

@@ -20,8 +20,13 @@ final class TSInterfaceConverter extends ConverterBase<TSInterfaceConfig> {
   String classCasing(String className) => className.toPascalCase();
 
   @override
-  void convert() {
-    controller.fullText = _generateInterface(json: json, name: modelName);
+  String generateCode() {
+    return _generateInterface(json: json, name: modelName);
+  }
+
+  @override
+  List<Line> generateLines() {
+    return generateCode().split('\n').map(Line.new).toList();
   }
 
   String _generateInterface({required Json json, required String name}) {

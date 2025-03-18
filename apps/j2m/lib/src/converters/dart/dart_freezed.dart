@@ -21,46 +21,47 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
   String classCasing(String className) => className.toPascalCase();
 
   @override
-  void convert() {
-    final importList = <String>{}; // mutable
+  List<Line> generateLines() {
+    final importList = <Line>{}; // mutable
     final code = _generateClass(
       json: json,
       className: modelName,
+      parent: modelName,
       importList: importList,
     );
-    controller.fullText =
-        importList.isNotEmpty ? '${importList.join('\n')}\n\n$code' : code;
+    return [...importList, Line.empty, ...code];
   }
 
-  String _generateClass({
+  List<Line> _generateClass({
     required Json json,
     required String className,
-    required Set<String> importList,
+    required String parent,
+    required Set<Line> importList,
   }) {
-    if (json.isEmpty) return '';
+    if (json.isEmpty) return [];
 
-    final mutable = config.mutable();
-    final isRequired = config.required();
-    final isNullable = config.nullable();
+    final allMutable = config.mutable();
+    final allRequired = config.required();
+    final allNullable = config.nullable();
     final toString = config.stringify();
     final copyWith = config.copyWith();
     final equality = config.equality();
     final fromJson = config.fromJson();
     final toJson = config.toJson();
     final jsonKey = config.jsonKey();
-    final detectDate = config.detectDate();
+    final allDateTime = config.detectDate();
 
     final fileName = modelName.toSnakeCase();
 
     // create @Freezed annotation
     final annotation = () {
       final fields = <String>{};
-      final unfreezed = {
+      const unfreezed = {
         'equal: false',
         'addImplicitFinal: false',
         'makeCollectionsUnmodifiable: false',
       };
-      if (mutable) fields.addAll(unfreezed);
+      if (allMutable) fields.addAll(unfreezed);
       if (!copyWith) fields.add('copyWith: false');
       if (!equality) fields.add('equal: false');
       if (!toString) fields.add('toStringOverride: false');
@@ -71,60 +72,125 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       return '@Freezed(\n  ${fields.join(',\n  ')},\n)'; // multi line
     }();
 
-    importList.addAll([
-      "import 'package:freezed_annotation/freezed_annotation.dart';",
-      "\npart '$fileName.freezed.dart';",
-      if (fromJson) "part '$fileName.g.dart';",
-    ]);
+    importList.addAll({
+      const Line(
+        "import 'package:freezed_annotation/freezed_annotation.dart';",
+      ),
+      Line.empty,
+      Line("part '$fileName.freezed.dart';"),
+      if (fromJson) Line("part '$fileName.g.dart';"),
+    });
 
-    final classList = <String>[];
+    final lines = <Line>[
+      Line(annotation),
+      Line('abstract class $className with _\$$className {'),
+      Line('  ${allMutable ? '' : 'const '}factory $className({'),
+    ];
 
-    final code = StringBuffer(
-      '$annotation\n'
-      'abstract class $className with _\$$className {\n'
-      '  ${mutable ? '' : 'const '}factory $className({\n',
-    );
+    final classList = <List<Line>>[];
 
     // fields
-    json.forEach((key, value) {
+    for (final MapEntry(:key, :value) in json.entries) {
+      final id = '$parent.$key';
+      final propName = propCasing(key);
+      final haveConfig = haveLineConfig(id);
+      final lineConfig = getLineConfig(id) ?? {};
+
       var type = _generateField(
         key: key,
+        parent: id,
         value: value,
         classList: classList,
         importList: importList,
       );
-      if (detectDate && isDate(value)) type = 'DateTime';
-      code.writeln(
-        '    ${jsonKey ? '@JsonKey(name: "$key") ' : ''}${isRequired ? 'required ' : ''}$type${isNullable ? '?' : ''} ${propCasing(key)},',
+
+      final nullable = lineConfig['nullable'] ?? allNullable;
+      final immutable = lineConfig['immutable'] ?? false;
+      final checkBoxes = <CheckBoxOption>[
+        if (allRequired)
+          CheckBoxOption(
+            label: 'Nullable',
+            value: nullable,
+            onChange: (v) => setLineConfig(id, {'nullable': v}),
+          ),
+        if (allMutable)
+          CheckBoxOption(
+            label: 'Immutable',
+            value: immutable,
+            onChange: (v) => setLineConfig(id, {'immutable': v}),
+          ),
+      ];
+
+      if (isDate(value)) {
+        final dateTime = lineConfig['dateTime'] ?? allDateTime;
+        checkBoxes.add(
+          CheckBoxOption(
+            label: 'Use DateTime',
+            value: dateTime,
+            onChange: (v) => setLineConfig(id, {'dateTime': v}),
+          ),
+        );
+        if (dateTime) type = 'DateTime';
+      }
+
+      final useJsonKey = lineConfig['useJsonKey'] ?? jsonKey;
+      if (key != propName) {
+        checkBoxes.add(
+          CheckBoxOption(
+            label: 'JsonKey',
+            value: useJsonKey,
+            onChange: (v) => setLineConfig(id, {'useJsonKey': v}),
+          ),
+        );
+      }
+
+      lines.add(
+        Line(
+          '    ${useJsonKey ? '@JsonKey(name: "$key") ' : ''}'
+          '${allRequired ? 'required ' : ''}'
+          '${immutable ? 'final ' : ''}'
+          '$type${nullable ? '?' : ''} '
+          '$propName,',
+          option:
+              haveConfig || checkBoxes.isNotEmpty
+                  ? Option(
+                    checkBoxes: checkBoxes,
+                    reset: haveConfig ? () => deleteLineConfig(id) : null,
+                  )
+                  : null,
+        ),
       );
-    });
-    code.writeln('  }) = _$className;'); // constructor end
+    }
+
+    lines.add(Line('  }) = _$className;')); // constructor end
 
     // fromJson
     if (fromJson) {
-      code.writeln(
-        '\n  factory $className.fromJson(Map<String, Object?> json) => '
-        '_\$${className}FromJson(json);',
-      );
+      lines.addAll([
+        Line.empty,
+        Line(
+          '  factory $className.fromJson(Map<String, Object?> json) => '
+          '_\$${className}FromJson(json);',
+        ),
+      ]);
     }
 
-    code.writeln('}'); // class end
+    lines.add(const Line('}')); // class end
 
     // sub models
     for (final classDef in classList) {
-      code
-        ..write('\n')
-        ..write(classDef);
+      lines.addAll([Line.empty, ...classDef]);
     }
-    return code.toString();
+    return lines;
   }
 
   /// Generate a field and return its type.
   String _generateField({
     required String key,
     required dynamic value,
-    required List<String> classList,
-    required Set<String> importList,
+    required String parent,
+    required List<List<Line>> classList,
+    required Set<Line> importList,
   }) {
     final String type;
     switch (value) {
@@ -133,7 +199,12 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       case Json():
         type = key.toPascalCase();
         classList.add(
-          _generateClass(json: value, className: type, importList: importList),
+          _generateClass(
+            json: value,
+            className: type,
+            importList: importList,
+            parent: parent,
+          ),
         );
       case List():
         final generic =
@@ -142,6 +213,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
                 : _generateField(
                   key: key,
                   value: value[0],
+                  parent: parent,
                   classList: classList,
                   importList: importList,
                 );
@@ -185,6 +257,7 @@ final class DartFreezedConfig extends ConfigBase {
 
   late final Toggle toJson = toggle('toJson', initial: true);
 
+  // TODO(albin): automatic key (if not camelCase)
   late final Toggle jsonKey = toggle('JsonKey');
 
   late final Toggle detectDate = toggle('Detect Date');

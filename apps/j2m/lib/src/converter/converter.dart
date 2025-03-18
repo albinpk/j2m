@@ -55,7 +55,34 @@ abstract class ConverterBase<T extends ConfigBase> {
   }
 
   /// Converts JSON data to code blocks.
-  void convert();
+  @nonVirtual
+  void convert() {
+    final lines = generateLines();
+    controller.fullText = lines.join('\n');
+    _lines = lines.length;
+    _lineOptions = {
+      for (final (i, Line(:option)) in lines.indexed)
+        if (option != null) i: option,
+    };
+  }
+
+  /// Total number of lines.
+  int get lines => _lines;
+  int _lines = 0;
+
+  /// Options for each line.
+  Map<int, Option> get lineOptions => _lineOptions;
+  Map<int, Option> _lineOptions = {};
+
+  // TODO(albin): remove
+  /// Generate code from JSON data.
+  @Deprecated('Use "generateLines" instead')
+  @protected
+  String generateCode() => '';
+
+  /// Generate code blocks from JSON data.
+  @protected
+  List<Line> generateLines();
 
   /// Casing for property names.
   String propCasing(String prop) => prop;
@@ -96,9 +123,78 @@ abstract class ConverterBase<T extends ConfigBase> {
     _toggleData[key] = value;
   }
 
+  final _lineConfig = <String, Map<String, bool>>{};
+
+  /// Set the config for a line.
+  void setLineConfig(String key, Map<String, bool> config) {
+    _lineConfig[key] = {...?_lineConfig[key], ...config};
+  }
+
+  /// Get the config for a line.
+  Map<String, bool>? getLineConfig(String key) => _lineConfig[key];
+
+  /// Check if a line has config.
+  bool haveLineConfig(String key) => _lineConfig.containsKey(key);
+
+  /// Delete the config for a line.
+  void deleteLineConfig(String key) => _lineConfig.remove(key);
+
   /// Called when a toggle value is changed.
   @Deprecated('Use toggle.onChange instead')
   @protected
   // ignore: avoid_positional_boolean_parameters
   void onToggleChange(String key, bool value) {}
+}
+
+/// Line of code.
+@immutable
+class Line {
+  const Line(this.text, {this.option});
+
+  /// Actual text content of the line.
+  final String text;
+
+  /// Options for the line.
+  final Option? option;
+
+  /// Empty line.
+  static const empty = Line('');
+
+  @override
+  String toString() => text;
+
+  @override
+  bool operator ==(covariant Line other) {
+    if (identical(this, other)) return true;
+    return other.text == text && other.option == option;
+  }
+
+  @override
+  int get hashCode => text.hashCode ^ option.hashCode;
+}
+
+/// Options for a line.
+@immutable
+class Option {
+  const Option({required this.reset, required this.checkBoxes});
+
+  /// Callback to reset line options.
+  final VoidCallback? reset;
+
+  /// Checkbox options.
+  final List<CheckBoxOption> checkBoxes;
+}
+
+/// Checkbox option for a line.
+@immutable
+class CheckBoxOption {
+  const CheckBoxOption({
+    required this.label,
+    required this.value,
+    required this.onChange,
+  });
+
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChange;
 }
