@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.11`](#j2m---v0011)
+
+---
+
+#### `j2m` - `v0.0.11`
+
+ - **FEAT**: add splash screen with logo and brand name.
+
+
 ## 2025-03-18
 
 ### Changes

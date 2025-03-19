@@ -1,3 +1,7 @@
+## 0.0.11
+
+ - **FEAT**: add splash screen with logo and brand name.
+
 ## 0.0.10
 
  - **REFACTOR**: update default JSON structure.
