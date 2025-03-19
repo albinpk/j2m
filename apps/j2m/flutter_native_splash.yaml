@@ -1,0 +1,19 @@
+# dart run flutter_native_splash:create
+# dart run flutter_native_splash:remove
+
+flutter_native_splash:
+  # color or background_image is the only required parameter.  Use color to set the background
+  # of your splash screen to a solid color.  Use background_image to set the background of your
+  # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
+  # size of the app. Only one parameter can be used, color and background_image cannot both be set.
+  color: "#121317"
+
+  # The image parameter allows you to specify an image used in the splash screen.  It must be a
+  # png file and should be sized for 4x pixel density.
+  image: assets/images/logo-512.png
+
+  # The branding property allows you to specify an image used as branding in the splash screen.
+  # It must be a png file. It is supported for Android, iOS and the Web.  For Android 12,
+  # see the Android 12 section below.
+  # https://onlinepngtools.com/convert-text-to-png (padding-200, font-80px, color-70%)
+  branding: assets/images/branding.png
