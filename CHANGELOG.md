@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-28
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.11+1`](#j2m---v00111)
+
+---
+
+#### `j2m` - `v0.0.11+1`
+
+ - **FIX**: conditionally render side option based on wrapText property.
+
+
 ## 2025-03-19
 
 ### Changes

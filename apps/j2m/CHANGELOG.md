@@ -1,3 +1,7 @@
+## 0.0.11+1
+
+ - **FIX**: conditionally render side option based on wrapText property.
+
 ## 0.0.11
 
  - **FEAT**: add splash screen with logo and brand name.
