@@ -66,7 +66,9 @@ class _OutputViewState extends State<OutputView> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (widget.converter.lineOptions.isNotEmpty) _buildSideOption(),
+          if (widget.converter.lineOptions.isNotEmpty && !widget.wrapText)
+            _buildSideOption(),
+
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
