@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-05-02
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.12`](#j2m---v0012)
+
+---
+
+#### `j2m` - `v0.0.12`
+
+ - **FIX**: update Flutter SDK version to 3.29.3 in configuration files.
+ - **FEAT**: implement unique class name generation in DartFreezedConverter.
+
+
 ## 2025-03-28
 
 ### Changes

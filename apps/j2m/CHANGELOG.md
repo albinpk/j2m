@@ -1,3 +1,8 @@
+## 0.0.12
+
+ - **FIX**: update Flutter SDK version to 3.29.3 in configuration files.
+ - **FEAT**: implement unique class name generation in DartFreezedConverter.
+
 ## 0.0.11+1
 
  - **FIX**: conditionally render side option based on wrapText property.
