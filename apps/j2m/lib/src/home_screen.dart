@@ -28,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Future(_convert);
+    _inputController.addListener(_onChange);
 
     // for development
     // Timer.periodic(const Duration(milliseconds: 200), (t) => _convert());
@@ -51,6 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
 ''',
     language: json,
   );
+
+  String _input = '';
+  void _onChange() {
+    if (_input != _inputController.fullText) {
+      _convert(format: false);
+      _input = _inputController.fullText;
+    }
+  }
 
   static const _encoder = JsonEncoder.withIndent('  ');
 
@@ -149,6 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 200,
                     child: TextField(
                       controller: _modelNameController,
+                      onChanged: (_) => _convert(),
                       decoration: const InputDecoration(
                         hintText: 'Model name',
                         border: OutlineInputBorder(),
@@ -345,12 +355,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // TODO(albin): cache json and load data on change
-  void _convert() {
+  void _convert({bool format = true}) {
     final text = _inputController.fullText.trim();
     if (text.isEmpty) return;
     try {
       final json = jsonDecode(text);
-      _inputController.fullText = '${_encoder.convert(json)}\n';
+      if (format) {
+        _inputController.fullText = '${_encoder.convert(json)}\n';
+      }
       _converter
         ..setJsonFromDecoded(json)
         ..modelName = _modelNameController.text
