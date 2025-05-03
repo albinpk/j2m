@@ -148,9 +148,9 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       lines.add(
         Line(
           '    ${switch (useJsonKey) {
-            true => '@JsonKey(name: "$key") ',
+            true => "@JsonKey(name: '$key') ",
             false => '',
-            null => key == propName ? '' : '@JsonKey(name: "$key") ',
+            null => key == propName ? '' : "@JsonKey(name: '$key') ",
           }}'
           '${allRequired ? 'required ' : ''}'
           '${immutable ? 'final ' : ''}'
