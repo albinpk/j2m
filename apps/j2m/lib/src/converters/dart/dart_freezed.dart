@@ -20,8 +20,6 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
   @override
   String classCasing(String className) => className.toPascalCase();
 
-  final _classNames = <String>[];
-
   @override
   List<Line> generateLines() {
     final importList = <Line>{}; // mutable
@@ -31,7 +29,6 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       parent: modelName,
       importList: importList,
     );
-    _classNames.clear();
     return [...importList, Line.empty, ...code];
   }
 
@@ -42,7 +39,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
     required Set<Line> importList,
   }) {
     if (json.isEmpty) return [];
-    _classNames.add(className);
+    newClass(className);
 
     final allMutable = config.mutable();
     final allRequired = config.required();
@@ -205,7 +202,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       case int() || double() || bool() || String():
         type = value.runtimeType.toString();
       case Json():
-        type = _findUniqClassName(key.toPascalCase());
+        type = getUniqName(key.toPascalCase());
         classList.add(
           _generateClass(
             json: value,
@@ -230,15 +227,6 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
         type = 'dynamic';
     }
     return type;
-  }
-
-  String _findUniqClassName(String className) {
-    var name = className;
-    var i = 1;
-    while (_classNames.contains(name)) {
-      name = '$className${i++}';
-    }
-    return name;
   }
 }
 

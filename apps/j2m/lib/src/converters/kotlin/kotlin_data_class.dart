@@ -42,6 +42,7 @@ final class KotlinDataClassConverter
     required Set<String> importList,
   }) {
     if (json.isEmpty) return '';
+    newClass(className);
 
     final nullable = config.nullable();
     final serializedName = config.serializedName();
@@ -97,7 +98,7 @@ final class KotlinDataClassConverter
       case String():
         type = 'String';
       case Json():
-        type = key.toPascalCase();
+        type = getUniqName(key.toPascalCase());
         classList.add(
           _generateClass(json: value, className: type, importList: importList),
         );

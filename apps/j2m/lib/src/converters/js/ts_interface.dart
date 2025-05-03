@@ -31,6 +31,7 @@ final class TSInterfaceConverter extends ConverterBase<TSInterfaceConfig> {
 
   String _generateInterface({required Json json, required String name}) {
     if (json.isEmpty) return '';
+    newClass(name);
 
     // toggles
     final nullable = config.nullable();
@@ -76,7 +77,7 @@ final class TSInterfaceConverter extends ConverterBase<TSInterfaceConfig> {
       case bool():
         type = 'boolean';
       case Json():
-        type = key.toPascalCase();
+        type = getUniqName(key.toPascalCase());
         interfaceList.add(_generateInterface(json: value, name: type));
       case List():
         final generic =

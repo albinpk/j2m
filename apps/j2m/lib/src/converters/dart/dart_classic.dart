@@ -41,6 +41,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
     required Set<String> importList,
   }) {
     if (json.isEmpty) return '';
+    newClass(className);
 
     final isMutable = config.mutable();
     final isRequired = config.required();
@@ -201,7 +202,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       case int() || double() || bool() || String():
         type = value.runtimeType.toString();
       case Json():
-        type = key.toPascalCase();
+        type = getUniqName(key.toPascalCase());
         classList.add(
           _generateClass(json: value, className: type, importList: importList),
         );

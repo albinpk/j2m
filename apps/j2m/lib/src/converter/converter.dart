@@ -57,6 +57,7 @@ abstract class ConverterBase<T extends ConfigBase> {
   /// Converts JSON data to code blocks.
   @nonVirtual
   void convert() {
+    _classNameList.clear();
     final lines = generateLines();
     controller.fullText = lines.join('\n');
     _lines = lines.length;
@@ -64,6 +65,23 @@ abstract class ConverterBase<T extends ConfigBase> {
       for (final (i, Line(:option)) in lines.indexed)
         if (option != null) i: option,
     };
+  }
+
+  /// Storing class names to avoid duplicates.
+  final _classNameList = <String>[];
+
+  /// Add a new class name to the list.
+  void newClass(String className) => _classNameList.add(className);
+
+  /// Generate a uniq name for class if already
+  /// exists by adding a number at the end.
+  String getUniqName(String className) {
+    var name = className;
+    var i = 1;
+    while (_classNameList.contains(name)) {
+      name = '$className${i++}';
+    }
+    return name;
   }
 
   /// Total number of lines.
