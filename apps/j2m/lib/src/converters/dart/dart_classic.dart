@@ -254,7 +254,7 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
 final class DartClassicConfig extends ConfigBase {
   DartClassicConfig(super.converter);
 
-  late final Toggle mutable = toggle(
+  late final Toggle<bool> mutable = toggle(
     'Mutable',
     onChange: (value) {
       if (value) {
@@ -266,7 +266,7 @@ final class DartClassicConfig extends ConfigBase {
     },
   );
 
-  late final Toggle required = toggle(
+  late final Toggle<bool> required = toggle(
     'Required',
     initial: true,
     onChange: (value) {
@@ -274,28 +274,28 @@ final class DartClassicConfig extends ConfigBase {
     },
   );
 
-  late final Toggle nullable = toggle(
+  late final Toggle<bool> nullable = toggle(
     'Nullable',
     onChange: (value) {
       if (!value) required.value = true;
     },
   );
-  late final Toggle stringify = toggle('toString');
+  late final Toggle<bool> stringify = toggle('toString');
 
-  late final Toggle copyWith = toggle('copyWith');
+  late final Toggle<bool> copyWith = toggle('copyWith');
 
-  late final Toggle equality = toggle(
+  late final Toggle<bool> equality = toggle(
     'Equality',
     onChange: (value) {
       if (value) mutable.value = false;
     },
   );
 
-  late final Toggle fromJson = toggle('fromJson');
+  late final Toggle<bool> fromJson = toggle('fromJson');
 
-  late final Toggle toJson = toggle('toJson');
+  late final Toggle<bool> toJson = toggle('toJson');
 
-  late final Toggle detectDate = toggle('Detect Date');
+  late final Toggle<bool> detectDate = toggle('Detect Date');
 
   @override
   Set<Toggle> get toggles => {

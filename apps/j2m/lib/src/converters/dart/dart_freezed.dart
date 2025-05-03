@@ -150,7 +150,11 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
 
       lines.add(
         Line(
-          '    ${useJsonKey ? '@JsonKey(name: "$key") ' : ''}'
+          '    ${switch (useJsonKey) {
+            true => '@JsonKey(name: "$key") ',
+            false => '',
+            null => key == propName ? '' : '@JsonKey(name: "$key") ',
+          }}'
           '${allRequired ? 'required ' : ''}'
           '${immutable ? 'final ' : ''}'
           '$type${nullable ? '?' : ''} '
@@ -241,12 +245,12 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
 final class DartFreezedConfig extends ConfigBase {
   DartFreezedConfig(super.converter);
 
-  late final Toggle mutable = toggle(
+  late final Toggle<bool> mutable = toggle(
     'Mutable',
     onChange: (value) => equality.value = !value,
   );
 
-  late final Toggle required = toggle(
+  late final Toggle<bool> required = toggle(
     'Required',
     initial: true,
     onChange: (value) {
@@ -254,26 +258,25 @@ final class DartFreezedConfig extends ConfigBase {
     },
   );
 
-  late final Toggle nullable = toggle(
+  late final Toggle<bool> nullable = toggle(
     'Nullable',
     onChange: (value) {
       if (!value) required.value = true;
     },
   );
-  late final Toggle stringify = toggle('toString', initial: true);
+  late final Toggle<bool> stringify = toggle('toString', initial: true);
 
-  late final Toggle copyWith = toggle('copyWith', initial: true);
+  late final Toggle<bool> copyWith = toggle('copyWith', initial: true);
 
-  late final Toggle equality = toggle('Equality', initial: true);
+  late final Toggle<bool> equality = toggle('Equality', initial: true);
 
-  late final Toggle fromJson = toggle('fromJson', initial: true);
+  late final Toggle<bool> fromJson = toggle('fromJson', initial: true);
 
-  late final Toggle toJson = toggle('toJson', initial: true);
+  late final Toggle<bool> toJson = toggle('toJson', initial: true);
 
-  // TODO(albin): automatic key (if not camelCase)
-  late final Toggle jsonKey = toggle('JsonKey');
+  late final Toggle<bool?> jsonKey = toggle('JsonKey', initial: null);
 
-  late final Toggle detectDate = toggle('Detect Date');
+  late final Toggle<bool> detectDate = toggle('Detect Date');
 
   @override
   Set<Toggle> get toggles => {

@@ -106,7 +106,7 @@ abstract class ConverterBase<T extends ConfigBase> {
   Set<Toggle> get toggles => config.toggles;
 
   /// Data for toggles.
-  final Map<String, bool> _toggleData = {};
+  final Map<String, bool?> _toggleData = {};
 
   /// Get the current value of a toggle.
   bool? _getToggleValue(String key) => _toggleData[key];
@@ -114,10 +114,9 @@ abstract class ConverterBase<T extends ConfigBase> {
   bool _validating = false;
 
   /// Set the value of a toggle.
-  void _setToggleValue(String key, bool value) {
+  void _setToggleValue(String key, bool? value) {
     if (!_validating) {
       _validating = true;
-      onToggleChange(key, value);
       _validating = false;
     }
     _toggleData[key] = value;
@@ -138,12 +137,6 @@ abstract class ConverterBase<T extends ConfigBase> {
 
   /// Delete the config for a line.
   void deleteLineConfig(String key) => _lineConfig.remove(key);
-
-  /// Called when a toggle value is changed.
-  @Deprecated('Use toggle.onChange instead')
-  @protected
-  // ignore: avoid_positional_boolean_parameters
-  void onToggleChange(String key, bool value) {}
 }
 
 /// Line of code.
@@ -195,6 +188,6 @@ class CheckBoxOption {
   });
 
   final String label;
-  final bool value;
+  final bool? value;
   final ValueChanged<bool> onChange;
 }

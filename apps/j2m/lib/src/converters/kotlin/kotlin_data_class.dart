@@ -122,8 +122,8 @@ final class KotlinDataClassConverter
 final class KotlinDataClassConfig extends ConfigBase {
   KotlinDataClassConfig(super.converter);
 
-  late final Toggle nullable = toggle('Nullable');
-  late final Toggle serializedName = toggle('SerializedName');
+  late final Toggle<bool> nullable = toggle('Nullable');
+  late final Toggle<bool> serializedName = toggle('SerializedName');
 
   @override
   Set<Toggle> get toggles => {nullable, serializedName};

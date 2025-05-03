@@ -1,34 +1,47 @@
 part of 'base.dart';
 
 /// Toggle option for a converter.
-class Toggle {
+class Toggle<T extends bool?> {
   const Toggle._(
     this.name,
     this._converter, {
-    bool initial = false,
-    ValueChanged<bool>? onChange,
-  }) : _initial = initial,
+    bool? initial = false,
+    ValueChanged<T>? onChange,
+  }) : _initial = initial as T,
        _onChange = onChange;
 
   /// Display name.
   final String name;
 
   final ConverterBase _converter;
-  final bool _initial;
-  final ValueChanged<bool>? _onChange;
+  final T _initial;
+  final ValueChanged<T>? _onChange;
 
   /// Get the current value.
-  bool call() => value;
+  T call() => value;
 
   /// Get the current value.
-  bool get value => _converter._getToggleValue(name) ?? _initial;
+  T get value => (_converter._getToggleValue(name) as T?) ?? _initial;
 
   /// Set the value.
-  set value(bool value) {
+  set value(T value) {
     _onChange?.call(value);
     _converter._setToggleValue(name, value);
   }
 
   /// Toggle the value.
-  void toggle() => value = !value;
+  void toggle() {
+    if (T == bool) {
+      value = !value! as T;
+    } else {
+      // tristate
+      value =
+          switch (value) {
+                true => false,
+                false => null,
+                null => true,
+              }
+              as T;
+    }
+  }
 }

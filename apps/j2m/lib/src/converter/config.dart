@@ -12,9 +12,9 @@ abstract class ConfigBase {
 
   /// Create a toggle.
   @protected
-  Toggle toggle(
+  Toggle<T> toggle<T extends bool?>(
     String name, {
-    bool initial = false,
-    ValueChanged<bool>? onChange,
-  }) => Toggle._(name, _converter, initial: initial, onChange: onChange);
+    bool? initial = false,
+    ValueChanged<T>? onChange,
+  }) => Toggle<T>._(name, _converter, initial: initial, onChange: onChange);
 }

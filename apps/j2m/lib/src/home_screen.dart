@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextButton _buildButton({
     required String label,
-    required bool value,
+    required bool? value,
     required VoidCallback onTap,
   }) {
     return TextButton(
@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(label),
-          Checkbox(value: value, onChanged: (_) => onTap()),
+          Checkbox(tristate: true, value: value, onChanged: (_) => onTap()),
         ],
       ),
     );

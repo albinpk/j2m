@@ -98,7 +98,7 @@ final class TSInterfaceConverter extends ConverterBase<TSInterfaceConfig> {
 final class TSInterfaceConfig extends ConfigBase {
   TSInterfaceConfig(super.converter);
 
-  late final Toggle nullable = toggle('Nullable');
+  late final Toggle<bool> nullable = toggle('Nullable');
 
   @override
   Set<Toggle> get toggles => {nullable};
