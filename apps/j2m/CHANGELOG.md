@@ -1,3 +1,10 @@
+## 0.0.13
+
+ - **FIX**: use single quotes for `@JsonKey` annotation in freezed converter.
+ - **FIX**: duplicate class names in all converters.
+ - **FEAT**: trigger conversion on text change.
+ - **FEAT**: add tristate for JsonKey toggle in freezed generator.
+
 ## 0.0.12
 
  - **FIX**: update Flutter SDK version to 3.29.3 in configuration files.
