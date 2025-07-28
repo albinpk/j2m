@@ -57,16 +57,15 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
       importList.add("import 'package:flutter/foundation.dart';");
     }
 
-    final code =
-        StringBuffer(isMutable ? '' : '@immutable\n')
-          // class start
-          ..write(
-            'class $className {\n'
-            // constructor
-            '  ${isMutable ? '' : 'const '}$className(',
-          )
-          // constructor params
-          ..writeln('{');
+    final code = StringBuffer(isMutable ? '' : '@immutable\n')
+      // class start
+      ..write(
+        'class $className {\n'
+        // constructor
+        '  ${isMutable ? '' : 'const '}$className(',
+      )
+      // constructor params
+      ..writeln('{');
 
     // map of keyName => propertyName
     final prop = getPropName(json);
@@ -207,15 +206,14 @@ final class DartClassicConverter extends ConverterBase<DartClassicConfig> {
           _generateClass(json: value, className: type, importList: importList),
         );
       case List():
-        final generic =
-            value.isEmpty
-                ? 'dynamic'
-                : _generateField(
-                  key: key,
-                  value: value[0],
-                  classList: classList,
-                  importList: importList,
-                );
+        final generic = value.isEmpty
+            ? 'dynamic'
+            : _generateField(
+                key: key,
+                value: value[0],
+                classList: classList,
+                importList: importList,
+              );
         type = 'List<$generic>';
       default:
         type = 'dynamic';

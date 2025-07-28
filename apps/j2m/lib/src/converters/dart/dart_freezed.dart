@@ -156,13 +156,12 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
           '${immutable ? 'final ' : ''}'
           '$type${nullable ? '?' : ''} '
           '$propName,',
-          option:
-              haveConfig || checkBoxes.isNotEmpty
-                  ? Option(
-                    checkBoxes: checkBoxes,
-                    reset: haveConfig ? () => deleteLineConfig(id) : null,
-                  )
-                  : null,
+          option: haveConfig || checkBoxes.isNotEmpty
+              ? Option(
+                  checkBoxes: checkBoxes,
+                  reset: haveConfig ? () => deleteLineConfig(id) : null,
+                )
+              : null,
         ),
       );
     }
@@ -212,16 +211,15 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
           ),
         );
       case List():
-        final generic =
-            value.isEmpty
-                ? 'dynamic'
-                : _generateField(
-                  key: key,
-                  value: value[0],
-                  parent: parent,
-                  classList: classList,
-                  importList: importList,
-                );
+        final generic = value.isEmpty
+            ? 'dynamic'
+            : _generateField(
+                key: key,
+                value: value[0],
+                parent: parent,
+                classList: classList,
+                importList: importList,
+              );
         type = 'List<$generic>';
       default:
         type = 'dynamic';

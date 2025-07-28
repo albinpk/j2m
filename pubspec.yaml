@@ -1,7 +1,7 @@
 name: J2M
 
 environment:
-  sdk: ">=3.7.0 <4.0.0"
+  sdk: ^3.8.1
 
 dev_dependencies:
   melos: ^6.3.2

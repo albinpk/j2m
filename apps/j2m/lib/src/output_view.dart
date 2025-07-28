@@ -38,7 +38,7 @@ class _OutputViewState extends State<OutputView> {
   static const _padding = 8.0;
   static const _fontSize = 16.0;
   static const _height = 1.5;
-  static const _lineHeight = _fontSize * _height;
+  static const double _lineHeight = _fontSize * _height;
 
   @override
   Widget build(BuildContext context) {
@@ -182,13 +182,12 @@ class _MenuButtonState extends State<_MenuButton> {
                               style: TextButton.styleFrom(
                                 foregroundColor: context.cs.error,
                               ),
-                              onPressed:
-                                  option.reset == null
-                                      ? null
-                                      : () {
-                                        option.reset!();
-                                        widget.onChange();
-                                      },
+                              onPressed: option.reset == null
+                                  ? null
+                                  : () {
+                                      option.reset!();
+                                      widget.onChange();
+                                    },
                               child: const Text('Reset'),
                             ),
                           ],
@@ -217,10 +216,9 @@ class _MenuButtonState extends State<_MenuButton> {
         child: InkWell(
           onTap: portalController.toggle,
           child: ColoredBox(
-            color:
-                option.reset == null
-                    ? Colors.transparent
-                    : cs.primary.withValues(alpha: 0.3),
+            color: option.reset == null
+                ? Colors.transparent
+                : cs.primary.withValues(alpha: 0.3),
             child: Icon(
               Icons.more_horiz,
               color: cs.onSurface.withValues(alpha: 0.5),

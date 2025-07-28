@@ -80,14 +80,13 @@ final class TSInterfaceConverter extends ConverterBase<TSInterfaceConfig> {
         type = getUniqName(key.toPascalCase());
         interfaceList.add(_generateInterface(json: value, name: type));
       case List():
-        final generic =
-            value.isEmpty
-                ? 'undefined'
-                : _generateField(
-                  key: key,
-                  value: value[0],
-                  interfaceList: interfaceList,
-                );
+        final generic = value.isEmpty
+            ? 'undefined'
+            : _generateField(
+                key: key,
+                value: value[0],
+                interfaceList: interfaceList,
+              );
         type = '$generic[]';
       default:
         type = 'undefined';

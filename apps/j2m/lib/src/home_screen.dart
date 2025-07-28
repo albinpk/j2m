@@ -235,10 +235,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   // text wrap
                                   IconButton(
                                     tooltip: 'Wrap text',
-                                    color:
-                                        _wrapInputText
-                                            ? colors.onSurface
-                                            : null,
+                                    color: _wrapInputText
+                                        ? colors.onSurface
+                                        : null,
                                     onPressed: () {
                                       setState(
                                         () => _wrapInputText = !_wrapInputText,
@@ -281,8 +280,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               alignment: Alignment.topRight,
                               child: IconButton(
                                 tooltip: 'Wrap text',
-                                color:
-                                    _wrapOutputText ? colors.onSurface : null,
+                                color: _wrapOutputText
+                                    ? colors.onSurface
+                                    : null,
                                 onPressed: () {
                                   setState(
                                     () => _wrapOutputText = !_wrapOutputText,

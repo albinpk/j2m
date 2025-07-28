@@ -103,15 +103,14 @@ final class KotlinDataClassConverter
           _generateClass(json: value, className: type, importList: importList),
         );
       case List(:final isEmpty):
-        final generic =
-            isEmpty
-                ? 'Any'
-                : _generateField(
-                  key: key,
-                  value: value[0],
-                  classList: classList,
-                  importList: importList,
-                );
+        final generic = isEmpty
+            ? 'Any'
+            : _generateField(
+                key: key,
+                value: value[0],
+                classList: classList,
+                importList: importList,
+              );
         type = 'List<$generic>';
       default:
         type = 'Any';
