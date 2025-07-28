@@ -139,7 +139,7 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
         checkBoxes.add(
           CheckBoxOption(
             label: 'JsonKey',
-            value: useJsonKey,
+            value: useJsonKey ?? key == propName,
             onChange: (v) => setLineConfig(id, {'useJsonKey': v}),
           ),
         );
