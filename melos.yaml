@@ -3,3 +3,14 @@ name: J2M
 packages:
   - apps/*
   - packages/*
+
+repository: https://github.com/albinpk/j2m
+
+sdkPath: .fvm/flutter_sdk
+
+command:
+  version:
+    hooks:
+      preCommit: >
+        ./scripts/build.sh
+        && git add docs/
