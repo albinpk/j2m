@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.0.13
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.8.1
 
 dependencies:
   change_case: ^2.2.0
@@ -20,7 +20,7 @@ dev_dependencies:
   flutter_native_splash: ^2.4.5
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^7.0.0
+  very_good_analysis: ^9.0.0
 
 flutter:
   uses-material-design: true

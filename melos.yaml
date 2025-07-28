@@ -1,4 +1,5 @@
 name: J2M
+
 packages:
   - apps/*
   - packages/*
