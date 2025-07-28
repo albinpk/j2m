@@ -1,3 +1,9 @@
+## 0.0.14
+
+ - **FIX**: allow generate empty classes for freezed. ([cb4d2aaa](https://github.com/albinpk/j2m/commit/cb4d2aaac49a9ac9dc893109a8be26cf23351645))
+ - **FIX**: null issue in freezed line options. ([c8967e59](https://github.com/albinpk/j2m/commit/c8967e59932b2209fc2d5faf7fdf15a7ec806c52))
+ - **FEAT**: add `flu` variant for dart language. ([9b794b46](https://github.com/albinpk/j2m/commit/9b794b46299f31877e4f7283c6fdff74a656416e))
+
 ## 0.0.13
 
  - **FIX**: use single quotes for `@JsonKey` annotation in freezed converter.

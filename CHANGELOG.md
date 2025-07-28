@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-07-28
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.14`](#j2m---v0014)
+
+---
+
+#### `j2m` - `v0.0.14`
+
+ - **FIX**: allow generate empty classes for freezed. ([cb4d2aaa](https://github.com/albinpk/j2m/commit/cb4d2aaac49a9ac9dc893109a8be26cf23351645))
+ - **FIX**: null issue in freezed line options. ([c8967e59](https://github.com/albinpk/j2m/commit/c8967e59932b2209fc2d5faf7fdf15a7ec806c52))
+ - **FEAT**: add `flu` variant for dart language. ([9b794b46](https://github.com/albinpk/j2m/commit/9b794b46299f31877e4f7283c6fdff74a656416e))
+
+
 ## 2025-05-03
 
 ### Changes
