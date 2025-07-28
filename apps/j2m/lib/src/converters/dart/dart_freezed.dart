@@ -38,7 +38,6 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
     required String parent,
     required Set<Line> importList,
   }) {
-    if (json.isEmpty) return [];
     newClass(className);
 
     final allMutable = config.mutable();
@@ -85,7 +84,10 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
     final lines = <Line>[
       Line(annotation),
       Line('abstract class $className with _\$$className {'),
-      Line('  ${allMutable ? '' : 'const '}factory $className({'),
+      Line(
+        '  ${allMutable ? '' : 'const '}factory $className('
+        '${json.isNotEmpty ? '{' : ''}',
+      ),
     ];
 
     final classList = <List<Line>>[];
@@ -166,7 +168,12 @@ final class DartFreezedConverter extends ConverterBase<DartFreezedConfig> {
       );
     }
 
-    lines.add(Line('  }) = _$className;')); // constructor end
+    lines.add(
+      Line(
+        '${json.isNotEmpty ? '  }' : '  '}'
+        ') = _$className;',
+      ),
+    ); // constructor end
 
     // fromJson
     if (fromJson) {
