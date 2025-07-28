@@ -1,4 +1,5 @@
 import '../converters/dart/dart_classic.dart';
+import '../converters/dart/dart_flu.dart';
 import '../converters/dart/dart_freezed.dart';
 import '../converters/js/ts_interface.dart';
 import '../converters/kotlin/kotlin_data_class.dart';
@@ -23,6 +24,7 @@ class Variant {
     Language.dart: {
       Variant('Classic', DartClassicConverter.new),
       Variant('Freezed', DartFreezedConverter.new),
+      Variant('Flu', DartFluConverter.new),
     },
     Language.javascript: {Variant('Interface', TSInterfaceConverter.new)},
     Language.kotlin: {Variant('Data Class', KotlinDataClassConverter.new)},
