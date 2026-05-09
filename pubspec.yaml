@@ -3,5 +3,19 @@ name: J2M
 environment:
   sdk: ^3.8.1
 
+workspace:
+  - apps/j2m
+
 dev_dependencies:
-  melos: ^6.3.2
+  melos: ^7.7.0
+  very_good_analysis: ^10.2.0
+
+melos:
+  sdkPath: .fvm/flutter_sdk
+  repository: https://github.com/albinpk/j2m
+  command:
+    version:
+      hooks:
+        preCommit: >
+          ./scripts/build.sh
+          && git add docs/
