@@ -1,3 +1,7 @@
+## 1.0.0
+
+ - **FIX**: remove dev banner. ([a13cd168](https://github.com/albinpk/j2m/commit/a13cd16859d6e01f51076037b8fd916cfea77d38))
+
 ## 0.0.15
 
  - **FIX**: macos run. ([4e5a48b3](https://github.com/albinpk/j2m/commit/4e5a48b37bc0acf7203c8c881eb08143b3f2d93f))

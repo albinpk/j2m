@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`j2m` - `v1.0.0`](#j2m---v100)
+
+---
+
+#### `j2m` - `v1.0.0`
+
+ - **FIX**: remove dev banner. ([a13cd168](https://github.com/albinpk/j2m/commit/a13cd16859d6e01f51076037b8fd916cfea77d38))
+
+
+## 2026-05-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`j2m` - `v0.0.15`](#j2m---v0015)
 
 ---
