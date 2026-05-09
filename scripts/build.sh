@@ -8,10 +8,10 @@ fvm flutter clean
 fvm flutter pub get
 
 # for gh pages
-# fvm flutter build web --base-href=/j2m/
+# fvm flutter build web --wasm --base-href=/j2m/
 
 # for cloudflare
-fvm flutter build web
+fvm flutter build web --wasm
 
 cd ../../
 
