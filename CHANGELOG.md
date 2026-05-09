@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-05-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v0.0.15`](#j2m---v0015)
+
+---
+
+#### `j2m` - `v0.0.15`
+
+ - **FIX**: macos run. ([4e5a48b3](https://github.com/albinpk/j2m/commit/4e5a48b37bc0acf7203c8c881eb08143b3f2d93f))
+ - **FIX**: upgrade flutter sdk to `3.41.7` and migrate to dart workspace. ([10b399a7](https://github.com/albinpk/j2m/commit/10b399a70f1ab50cf244a87991f27abc1f25b440))
+
+
 ## 2025-07-28
 
 ### Changes

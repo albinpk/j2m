@@ -1,3 +1,8 @@
+## 0.0.15
+
+ - **FIX**: macos run. ([4e5a48b3](https://github.com/albinpk/j2m/commit/4e5a48b37bc0acf7203c8c881eb08143b3f2d93f))
+ - **FIX**: upgrade flutter sdk to `3.41.7` and migrate to dart workspace. ([10b399a7](https://github.com/albinpk/j2m/commit/10b399a70f1ab50cf244a87991f27abc1f25b440))
+
 ## 0.0.14
 
  - **FIX**: allow generate empty classes for freezed. ([cb4d2aaa](https://github.com/albinpk/j2m/commit/cb4d2aaac49a9ac9dc893109a8be26cf23351645))
