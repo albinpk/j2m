@@ -6,17 +6,20 @@
     "configurations": [
         {
             "name": "Debug",
+            "cwd": "apps/j2m",
             "request": "launch",
             "type": "dart"
         },
         {
             "name": "Profile",
+            "cwd": "apps/j2m",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
             "name": "Release",
+            "cwd": "apps/j2m",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
