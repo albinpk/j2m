@@ -11,12 +11,7 @@ class App extends StatelessWidget {
       title: 'J2M - Convert JSON to Model Instantly',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
-      home: const Banner(
-        message: 'DEV',
-        location: BannerLocation.topEnd,
-        child: HomeScreen(),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
