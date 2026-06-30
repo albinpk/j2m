@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **FIX**: upgrade Flutter SDK to 3.44.4 and update project dependencies
+
 ## 1.0.0
 
  - **FIX**: remove dev banner. ([a13cd168](https://github.com/albinpk/j2m/commit/a13cd16859d6e01f51076037b8fd916cfea77d38))

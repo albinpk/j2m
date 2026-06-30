@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2026-06-30
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`j2m` - `v1.0.1`](#j2m---v101)
+
+---
+
+#### `j2m` - `v1.0.1`
+
+ - **FIX**: upgrade Flutter SDK to 3.44.4 and update project dependencies
+
+
 ## 2026-05-09
 
 ### Changes
